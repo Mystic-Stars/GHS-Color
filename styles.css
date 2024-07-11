@@ -78,7 +78,7 @@ h1 {
   font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
-  color: #000000;
+  color: var(--text-color);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: -1px;
 }
