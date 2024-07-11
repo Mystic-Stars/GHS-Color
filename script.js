@@ -32,6 +32,14 @@ const colors = [
         descriptionZh: "终末的色彩，世间的残响。",
         temperature: "neutral"
     },
+    {
+        name: "Lafcadian Blue",
+        nameZh: "氿月蓝",
+        hex: "#66ccff",
+        description: "The color of Highness Tianyi.",
+        descriptionZh: "即“天依蓝”。",
+        temperature: "cold"
+    },
 ];
 // 初始化函数
 function init() {
