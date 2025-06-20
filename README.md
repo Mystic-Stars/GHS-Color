@@ -2,6 +2,8 @@
 
 **[English](https://github.com/Mystic-Stars/GHS-Color/blob/main/README-EN.md) | 中文**
 
+最近将会重构此程序
+
 [GHS Color](https://github.com/Mystic-Stars/GHS-Color)是一个由[Garbage Human Studio](https://www.ghs.red/)开发的开源色彩管理器，旨在为设计师、开发者和任何需要颜色灵感的人提供一个便捷的平台。它不仅拥有丰富的颜色库，还支持多种颜色格式复制、收藏夹功能，让你轻松管理和使用你心仪的颜色。🎉
 
 ![亮色](https://bu.dusays.com/2024/08/05/66b06fc6ec7b2.png)
