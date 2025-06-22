@@ -18,7 +18,11 @@ const flagComponents: Record<string, React.ComponentType<any>> = {
   US,
 };
 
-export function FlagIcon({ countryCode, className, size = 'md' }: FlagIconProps) {
+export function FlagIcon({
+  countryCode,
+  className,
+  size = 'md',
+}: FlagIconProps) {
   const sizeClasses = {
     sm: 'w-4 h-3',
     md: 'w-5 h-4',
@@ -45,11 +49,7 @@ export function FlagIcon({ countryCode, className, size = 'md' }: FlagIconProps)
 
   return (
     <div
-      className={cn(
-        'flag-icon',
-        sizeClasses[size],
-        className
-      )}
+      className={cn('flag-icon', sizeClasses[size], className)}
       title={`Country: ${countryCode}`}
     >
       <FlagComponent className="w-full h-full object-cover" />

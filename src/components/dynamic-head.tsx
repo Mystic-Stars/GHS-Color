@@ -14,15 +14,15 @@ export function DynamicHead({ children }: DynamicHeadProps) {
   useEffect(() => {
     if (typeof document !== 'undefined') {
       // 更新页面标题 - 从环境变量获取
-      const title = language === 'zh-CN'
-        ? appConfig.site.title
-        : appConfig.site.titleEn;
+      const title =
+        language === 'zh-CN' ? appConfig.site.title : appConfig.site.titleEn;
       document.title = title;
 
       // 更新meta描述 - 从环境变量获取
-      const description = language === 'zh-CN'
-        ? appConfig.site.description
-        : appConfig.site.descriptionEn;
+      const description =
+        language === 'zh-CN'
+          ? appConfig.site.description
+          : appConfig.site.descriptionEn;
 
       let metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {

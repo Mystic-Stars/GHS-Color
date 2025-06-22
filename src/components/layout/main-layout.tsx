@@ -16,7 +16,7 @@ export function MainLayout({
   children,
   onSubmitColor,
   onSettings,
-  onBackToColors
+  onBackToColors,
 }: MainLayoutProps) {
   const { sidebarOpen, setSidebarOpen, settings } = useAppStore();
   const { updateStats } = useColorStore();
@@ -31,7 +31,8 @@ export function MainLayout({
     const root = document.documentElement;
 
     if (settings.theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+        .matches
         ? 'dark'
         : 'light';
       root.classList.toggle('dark', systemTheme === 'dark');
@@ -71,14 +72,12 @@ export function MainLayout({
         <Sidebar onBackToColors={onBackToColors} />
 
         {/* 主内容区 */}
-        <main 
+        <main
           className={`flex-1 overflow-hidden transition-all duration-300 ${
             sidebarOpen ? 'md:ml-0' : ''
           }`}
         >
-          <div className="h-full overflow-y-auto">
-            {children}
-          </div>
+          <div className="h-full overflow-y-auto">{children}</div>
         </main>
       </div>
     </div>

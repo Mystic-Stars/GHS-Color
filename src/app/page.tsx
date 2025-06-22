@@ -7,19 +7,17 @@ import { SubmitGuide } from '@/components/submit-guide';
 import { SettingsModal } from '@/components/settings/settings-modal';
 import { useColorStore } from '@/store';
 import { useInitData } from '@/hooks/use-init-data';
-import { useToast } from '@/components/toast-provider';
-
 import type { ExtendedColor } from '@/types';
 
 export default function Home() {
   const { selectedColorId, colors, selectColor } = useColorStore();
-  const { isInitialized } = useInitData();
+  useInitData();
   const [showSubmitGuide, setShowSubmitGuide] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const selectedColor = selectedColorId
-    ? colors.find(c => c.id === selectedColorId)
+    ? colors.find((c) => c.id === selectedColorId)
     : null;
 
   const handleSubmitColor = () => {
@@ -44,10 +42,6 @@ export default function Home() {
     setShowDetailModal(false);
     selectColor(null);
   };
-
-
-
-
 
   const handleSettings = () => {
     setShowSettingsModal(true);

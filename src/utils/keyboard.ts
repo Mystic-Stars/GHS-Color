@@ -66,7 +66,7 @@ class KeyboardManager {
    */
   private startListening() {
     if (typeof window === 'undefined') return;
-    
+
     document.addEventListener('keydown', this.handleKeyDown);
     this.isListening = true;
   }
@@ -76,7 +76,7 @@ class KeyboardManager {
    */
   private stopListening() {
     if (typeof window === 'undefined') return;
-    
+
     document.removeEventListener('keydown', this.handleKeyDown);
     this.isListening = false;
   }
@@ -110,7 +110,10 @@ class KeyboardManager {
   /**
    * 检查事件是否匹配快捷键
    */
-  private matchesShortcut(event: KeyboardEvent, shortcut: KeyboardShortcut): boolean {
+  private matchesShortcut(
+    event: KeyboardEvent,
+    shortcut: KeyboardShortcut
+  ): boolean {
     const key = event.key.toLowerCase();
     const targetKey = shortcut.key.toLowerCase();
 
@@ -182,14 +185,14 @@ export function useKeyboardShortcut(
  */
 export function formatShortcut(shortcut: KeyboardShortcut): string {
   const parts: string[] = [];
-  
+
   if (shortcut.ctrl) parts.push('Ctrl');
   if (shortcut.shift) parts.push('Shift');
   if (shortcut.alt) parts.push('Alt');
   if (shortcut.meta) parts.push('Cmd');
-  
+
   parts.push(shortcut.key.toUpperCase());
-  
+
   return parts.join(' + ');
 }
 

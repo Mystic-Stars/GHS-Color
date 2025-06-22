@@ -14,10 +14,13 @@ interface SidebarProps {
 
 export function Sidebar({ onBackToColors }: SidebarProps) {
   const { sidebarOpen, setSidebarOpen, settings } = useAppStore();
-  const { categories, stats, filter, setFilter, clearFilter, incrementUsage } = useColorStore();
+  const { categories, stats, filter, setFilter, clearFilter, incrementUsage } =
+    useColorStore();
   const { t } = useTranslation();
   const { getLocalizedText } = useLocalizedText();
-  const [selectedColor, setSelectedColor] = useState<ExtendedColor | null>(null);
+  const [selectedColor, setSelectedColor] = useState<ExtendedColor | null>(
+    null
+  );
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showConverterModal, setShowConverterModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -50,8 +53,8 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
     if (categoryId && filter.categories?.includes(categoryId)) {
       clearFilter();
       onBackToColors?.();
-    } else {
-      // 更新过滤器
+    } else if (categoryId) {
+      // 更新过滤器 - 只有当 categoryId 不为 null 时才设置过滤器
       clearFilter();
       setFilter({ categories: [categoryId] });
       onBackToColors?.();
@@ -98,11 +101,11 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
   return (
     <>
       {/* 移动端遮罩 */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 z-40 md:hidden"
         onClick={() => setSidebarOpen(false)}
       />
-      
+
       {/* 侧边栏 */}
       <aside className="fixed left-0 top-0 h-full w-80 bg-background border-r z-50 md:relative md:z-auto">
         <div className="flex flex-col h-full">
@@ -131,7 +134,9 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                 <button
                   onClick={handleClearFilters}
                   className={`w-full flex items-center justify-between p-2 text-sm rounded-md hover:bg-accent ${
-                    !filter.categories?.length && !filter.favoritesOnly ? 'bg-accent' : ''
+                    !filter.categories?.length && !filter.favoritesOnly
+                      ? 'bg-accent'
+                      : ''
                   }`}
                 >
                   <span>{t('sidebar.allColors')}</span>
@@ -139,7 +144,7 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                     {stats?.totalColors || 0}
                   </Badge>
                 </button>
-                
+
                 <button
                   onClick={handleFavoritesClick}
                   className={`w-full flex items-center justify-between p-2 text-sm rounded-md hover:bg-accent ${
@@ -167,7 +172,7 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                 {categories.map((category) => {
                   const categoryCount = stats?.categoryCounts[category.id] || 0;
                   const isSelected = filter.categories?.includes(category.id);
-                  
+
                   return (
                     <button
                       key={category.id}
@@ -194,20 +199,27 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
             {/* 颜色温度统计 */}
             {stats && (
               <div>
-                <h3 className="text-sm font-medium mb-3">{t('search.temperature')}</h3>
+                <h3 className="text-sm font-medium mb-3">
+                  {t('search.temperature')}
+                </h3>
                 <div className="space-y-2">
                   {[
                     { key: 'warm', emoji: '🔥' },
                     { key: 'cool', emoji: '❄️' },
                     { key: 'neutral', emoji: '⚪' },
                   ].map(({ key, emoji }) => (
-                    <div key={key} className="flex items-center justify-between text-sm">
+                    <div
+                      key={key}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <span className="flex items-center gap-2">
                         <span>{emoji}</span>
                         <span>{t(`search.${key}`)}</span>
                       </span>
                       <Badge variant="outline" className="text-xs">
-                        {stats.temperatureCounts[key as keyof typeof stats.temperatureCounts] || 0}
+                        {stats.temperatureCounts[
+                          key as keyof typeof stats.temperatureCounts
+                        ] || 0}
                       </Badge>
                     </div>
                   ))}
@@ -235,7 +247,9 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
             {/* 最近使用的颜色 */}
             {stats?.recentColors && stats.recentColors.length > 0 && (
               <div>
-                <h3 className="text-sm font-medium mb-3">{t('sidebar.recentColors')}</h3>
+                <h3 className="text-sm font-medium mb-3">
+                  {t('sidebar.recentColors')}
+                </h3>
                 <div className="grid grid-cols-4 gap-2">
                   {stats.recentColors.slice(0, 8).map((color) => (
                     <div

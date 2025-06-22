@@ -6,7 +6,14 @@ export type ColorTemperature = 'warm' | 'cool' | 'neutral';
 /**
  * 颜色格式类型
  */
-export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'hsv' | 'rgba' | 'hsla' | 'css';
+export type ColorFormat =
+  | 'hex'
+  | 'rgb'
+  | 'hsl'
+  | 'hsv'
+  | 'rgba'
+  | 'hsla'
+  | 'css';
 
 /**
  * 基础颜色接口（兼容原版GHS Color）
@@ -89,7 +96,12 @@ export interface ColorFilter {
 /**
  * 颜色排序选项
  */
-export type ColorSortBy = 'name' | 'nameZh' | 'createdAt' | 'updatedAt' | 'usageCount';
+export type ColorSortBy =
+  | 'name'
+  | 'nameZh'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'usageCount';
 export type ColorSortOrder = 'asc' | 'desc';
 
 export interface ColorSort {

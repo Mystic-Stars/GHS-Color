@@ -1,8 +1,20 @@
 'use client';
 
 import React from 'react';
-import { ExternalLink, Github, FileText, Users, CheckCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
+import {
+  ExternalLink,
+  Github,
+  FileText,
+  Users,
+  CheckCircle,
+} from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+} from '@/components/ui';
 import { useTranslation } from '@/hooks/use-translation';
 import { submitGuideConfig } from '@/lib/env-config';
 
@@ -80,10 +92,7 @@ export function SubmitGuide({ onClose }: SubmitGuideProps) {
             <p className="text-sm text-muted-foreground">
               {t('submitGuide.steps.step2Description')}
             </p>
-            <Button
-              onClick={handleOpenIssue}
-              className="w-full gap-2"
-            >
+            <Button onClick={handleOpenIssue} className="w-full gap-2">
               <ExternalLink className="h-4 w-4" />
               {t('submitGuide.buttons.createIssue')}
             </Button>
@@ -125,7 +134,9 @@ export function SubmitGuide({ onClose }: SubmitGuideProps) {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <h4 className="font-semibold mb-2">{t('submitGuide.requirements.colorRequirements')}</h4>
+              <h4 className="font-semibold mb-2">
+                {t('submitGuide.requirements.colorRequirements')}
+              </h4>
               <ul className="text-sm space-y-1 text-muted-foreground">
                 <li>• {t('submitGuide.requirements.colorReq1')}</li>
                 <li>• {t('submitGuide.requirements.colorReq2')}</li>
@@ -134,7 +145,9 @@ export function SubmitGuide({ onClose }: SubmitGuideProps) {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">{t('submitGuide.requirements.descriptionRequirements')}</h4>
+              <h4 className="font-semibold mb-2">
+                {t('submitGuide.requirements.descriptionRequirements')}
+              </h4>
               <ul className="text-sm space-y-1 text-muted-foreground">
                 <li>• {t('submitGuide.requirements.descReq1')}</li>
                 <li>• {t('submitGuide.requirements.descReq2')}</li>
@@ -148,29 +161,21 @@ export function SubmitGuide({ onClose }: SubmitGuideProps) {
 
       {/* 快速链接 */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Button 
-          variant="outline" 
-          onClick={handleOpenGitHub}
-          className="gap-2"
-        >
+        <Button variant="outline" onClick={handleOpenGitHub} className="gap-2">
           <Github className="h-4 w-4" />
           {t('submitGuide.buttons.visitGitHub')}
         </Button>
-        
-        <Button 
-          variant="outline" 
+
+        <Button
+          variant="outline"
           onClick={handleOpenContributing}
           className="gap-2"
         >
           <FileText className="h-4 w-4" />
           {t('submitGuide.buttons.contributingGuide')}
         </Button>
-        
-        <Button 
-          variant="outline" 
-          onClick={handleOpenIssue}
-          className="gap-2"
-        >
+
+        <Button variant="outline" onClick={handleOpenIssue} className="gap-2">
           <Users className="h-4 w-4" />
           {t('submitGuide.buttons.viewIssues')}
         </Button>
@@ -187,9 +192,7 @@ export function SubmitGuide({ onClose }: SubmitGuideProps) {
 
       {/* 感谢信息 */}
       <div className="text-center text-sm text-muted-foreground border-t pt-6">
-        <p>
-          {t('submitGuide.thanks')}
-        </p>
+        <p>{t('submitGuide.thanks')}</p>
       </div>
     </div>
   );

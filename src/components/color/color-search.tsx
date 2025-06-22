@@ -25,7 +25,7 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
         const newFilter = { ...filter, keyword: searchValue };
         setFilter(newFilter);
         onFilterChange?.(newFilter);
-        
+
         if (searchValue.trim()) {
           addRecentSearch(searchValue.trim());
         }
@@ -44,26 +44,28 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
     setSearchValue('');
     clearFilter();
     setShowFilters(false);
-    onFilterChange?.({}as ColorFilter);
+    onFilterChange?.({} as ColorFilter);
   };
 
   const handleCategoryToggle = (categoryId: string) => {
     const currentCategories = filter.categories || [];
     const newCategories = currentCategories.includes(categoryId)
-      ? currentCategories.filter(id => id !== categoryId)
+      ? currentCategories.filter((id) => id !== categoryId)
       : [...currentCategories, categoryId];
-    
+
     const newFilter = { ...filter, categories: newCategories };
     setFilter(newFilter);
     onFilterChange?.(newFilter);
   };
 
-  const handleTemperatureToggle = (temperature: 'warm' | 'cool' | 'neutral') => {
+  const handleTemperatureToggle = (
+    temperature: 'warm' | 'cool' | 'neutral'
+  ) => {
     const currentTemperatures = filter.temperatures || [];
     const newTemperatures = currentTemperatures.includes(temperature)
-      ? currentTemperatures.filter(t => t !== temperature)
+      ? currentTemperatures.filter((t) => t !== temperature)
       : [...currentTemperatures, temperature];
-    
+
     const newFilter = { ...filter, temperatures: newTemperatures };
     setFilter(newFilter);
     onFilterChange?.(newFilter);
@@ -75,7 +77,7 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
     onFilterChange?.(newFilter);
   };
 
-  const hasActiveFilters = 
+  const hasActiveFilters =
     filter.keyword ||
     (filter.categories && filter.categories.length > 0) ||
     (filter.temperatures && filter.temperatures.length > 0) ||
@@ -120,13 +122,15 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
           <span className="text-sm text-muted-foreground">
             {settings.language === 'zh-CN' ? '过滤器:' : 'Filters:'}
           </span>
-          
-          {filter.categories?.map(categoryId => {
-            const category = categories.find(c => c.id === categoryId);
+
+          {filter.categories?.map((categoryId) => {
+            const category = categories.find((c) => c.id === categoryId);
             return category ? (
               <Badge key={categoryId} variant="secondary" className="gap-1">
                 <span>{category.icon}</span>
-                {settings.language === 'zh-CN' ? category.nameZh : category.name}
+                {settings.language === 'zh-CN'
+                  ? category.nameZh
+                  : category.name}
                 <X
                   className="h-3 w-3 cursor-pointer"
                   onClick={() => handleCategoryToggle(categoryId)}
@@ -134,8 +138,8 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
               </Badge>
             ) : null;
           })}
-          
-          {filter.temperatures?.map(temp => (
+
+          {filter.temperatures?.map((temp) => (
             <Badge key={temp} variant="secondary" className="gap-1">
               {t(`search.${temp}`)}
               <X
@@ -144,7 +148,7 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
               />
             </Badge>
           ))}
-          
+
           {filter.favoritesOnly && (
             <Badge variant="secondary" className="gap-1">
               {t('search.favorites')}
@@ -154,7 +158,7 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
               />
             </Badge>
           )}
-          
+
           <Button
             size="sm"
             variant="ghost"
@@ -175,14 +179,21 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
               {settings.language === 'zh-CN' ? '分类' : 'Categories'}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
+              {categories.map((category) => (
                 <Badge
                   key={category.id}
-                  variant={filter.categories?.includes(category.id) ? 'default' : 'outline'}
+                  variant={
+                    filter.categories?.includes(category.id)
+                      ? 'default'
+                      : 'outline'
+                  }
                   className="cursor-pointer"
                   onClick={() => handleCategoryToggle(category.id)}
                 >
-                  {category.icon} {settings.language === 'zh-CN' ? category.nameZh : category.name}
+                  {category.icon}{' '}
+                  {settings.language === 'zh-CN'
+                    ? category.nameZh
+                    : category.name}
                 </Badge>
               ))}
             </div>
@@ -194,20 +205,22 @@ export function ColorSearch({ onFilterChange }: ColorSearchProps) {
               {t('search.temperature')}
             </h4>
             <div className="flex gap-2">
-              {[
-                { value: 'warm' },
-                { value: 'cool' },
-                { value: 'neutral' },
-              ].map(temp => (
-                <Badge
-                  key={temp.value}
-                  variant={filter.temperatures?.includes(temp.value as any) ? 'default' : 'outline'}
-                  className="cursor-pointer"
-                  onClick={() => handleTemperatureToggle(temp.value as any)}
-                >
-                  {t(`search.${temp.value}`)}
-                </Badge>
-              ))}
+              {[{ value: 'warm' }, { value: 'cool' }, { value: 'neutral' }].map(
+                (temp) => (
+                  <Badge
+                    key={temp.value}
+                    variant={
+                      filter.temperatures?.includes(temp.value as any)
+                        ? 'default'
+                        : 'outline'
+                    }
+                    className="cursor-pointer"
+                    onClick={() => handleTemperatureToggle(temp.value as any)}
+                  >
+                    {t(`search.${temp.value}`)}
+                  </Badge>
+                )
+              )}
             </div>
           </div>
 

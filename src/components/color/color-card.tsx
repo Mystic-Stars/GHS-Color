@@ -6,7 +6,12 @@ import { Card, CardContent, Button, Badge } from '@/components/ui';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
-import { formatColor, getContrastColor, copyToClipboard, getCategoryIcon } from '@/utils';
+import {
+  formatColor,
+  getContrastColor,
+  copyToClipboard,
+  getCategoryIcon,
+} from '@/utils';
 import type { ExtendedColor, ColorFormat } from '@/types';
 
 interface ColorCardProps {
@@ -15,7 +20,11 @@ interface ColorCardProps {
   onClick?: () => void;
 }
 
-export function ColorCard({ color, showDetails = true, onClick }: ColorCardProps) {
+export function ColorCard({
+  color,
+  showDetails = true,
+  onClick,
+}: ColorCardProps) {
   const { toggleFavorite, incrementUsage, selectColor } = useColorStore();
   const { settings } = useAppStore();
   const { t } = useTranslation();
@@ -45,7 +54,7 @@ export function ColorCard({ color, showDetails = true, onClick }: ColorCardProps
   };
 
   return (
-    <Card 
+    <Card
       className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105"
       onClick={handleCardClick}
     >
@@ -61,31 +70,29 @@ export function ColorCard({ color, showDetails = true, onClick }: ColorCardProps
               size="icon"
               variant="ghost"
               className="h-8 w-8 backdrop-blur-sm"
-              style={{ 
+              style={{
                 backgroundColor: `${contrastColor}20`,
-                color: contrastColor 
+                color: contrastColor,
               }}
               onClick={handleToggleFavorite}
             >
-              <Heart 
-                className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`} 
+              <Heart
+                className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`}
               />
             </Button>
             <Button
               size="icon"
               variant="ghost"
               className="h-8 w-8 backdrop-blur-sm"
-              style={{ 
+              style={{
                 backgroundColor: `${contrastColor}20`,
-                color: contrastColor 
+                color: contrastColor,
               }}
               onClick={(e) => handleCopyColor(settings.defaultColorFormat, e)}
             >
               <Copy className="h-4 w-4" />
             </Button>
           </div>
-
-
         </div>
 
         {/* 颜色信息区域 */}
@@ -109,10 +116,16 @@ export function ColorCard({ color, showDetails = true, onClick }: ColorCardProps
                 {/* 分类 - 带有emoji图标 */}
                 {color.category && (
                   <Badge variant="outline" className="text-xs font-medium">
-                    <span className="mr-1">{getCategoryIcon(color.category)}</span>
-                    {color.category === 'brand' ? t('color.brand') :
-                     color.category === 'ui' ? t('color.ui') :
-                     color.category === 'team' ? t('color.team') : color.category}
+                    <span className="mr-1">
+                      {getCategoryIcon(color.category)}
+                    </span>
+                    {color.category === 'brand'
+                      ? t('color.brand')
+                      : color.category === 'ui'
+                        ? t('color.ui')
+                        : color.category === 'team'
+                          ? t('color.team')
+                          : color.category}
                   </Badge>
                 )}
                 {/* 标签 - 不带图标 */}

@@ -135,7 +135,8 @@ export const zhCN = {
   // 提交指南
   submitGuide: {
     title: '提交新颜色',
-    description: '感谢您为 GHS Color 项目贡献新的颜色！请按照以下步骤提交您的颜色建议。',
+    description:
+      '感谢您为 GHS Color 项目贡献新的颜色！请按照以下步骤提交您的颜色建议。',
     steps: {
       title: '提交步骤',
       step1: '访问 GitHub 仓库',
@@ -175,7 +176,8 @@ export const zhCN = {
       viewIssues: '查看所有 Issues',
     },
     backToColors: '返回颜色管理',
-    thanks: '感谢您对 GHS Color 项目的贡献！您的每一个颜色建议都让这个工具变得更好。',
+    thanks:
+      '感谢您对 GHS Color 项目的贡献！您的每一个颜色建议都让这个工具变得更好。',
   },
 
   // 工具

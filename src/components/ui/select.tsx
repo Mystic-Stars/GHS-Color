@@ -28,9 +28,9 @@ export function Select({
   className,
 }: SelectProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState<SelectOption | undefined>(
-    options.find(option => option.value === value)
-  );
+  const [selectedOption, setSelectedOption] = React.useState<
+    SelectOption | undefined
+  >(options.find((option) => option.value === value));
 
   const selectRef = React.useRef<HTMLDivElement>(null);
 
@@ -60,10 +60,11 @@ export function Select({
           setIsOpen(true);
         } else {
           // 移动到下一个选项
-          const currentIndex = selectedOption 
-            ? options.findIndex(opt => opt.value === selectedOption.value)
+          const currentIndex = selectedOption
+            ? options.findIndex((opt) => opt.value === selectedOption.value)
             : -1;
-          const nextIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0;
+          const nextIndex =
+            currentIndex < options.length - 1 ? currentIndex + 1 : 0;
           handleSelect(options[nextIndex]);
         }
         break;
@@ -73,10 +74,11 @@ export function Select({
           setIsOpen(true);
         } else {
           // 移动到上一个选项
-          const currentIndex = selectedOption 
-            ? options.findIndex(opt => opt.value === selectedOption.value)
+          const currentIndex = selectedOption
+            ? options.findIndex((opt) => opt.value === selectedOption.value)
             : -1;
-          const prevIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1;
+          const prevIndex =
+            currentIndex > 0 ? currentIndex - 1 : options.length - 1;
           handleSelect(options[prevIndex]);
         }
         break;
@@ -86,20 +88,24 @@ export function Select({
   // 点击外部关闭下拉菜单
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      if (
+        selectRef.current &&
+        !selectRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [isOpen]);
 
   // 更新选中的选项
   React.useEffect(() => {
-    const option = options.find(opt => opt.value === value);
+    const option = options.find((opt) => opt.value === value);
     setSelectedOption(option);
   }, [value, options]);
 
@@ -125,15 +131,21 @@ export function Select({
           {selectedOption?.icon && (
             <selectedOption.icon className="h-4 w-4 flex-shrink-0" />
           )}
-          <span className={selectedOption ? 'text-foreground font-medium' : 'text-muted-foreground'}>
+          <span
+            className={
+              selectedOption
+                ? 'text-foreground font-medium'
+                : 'text-muted-foreground'
+            }
+          >
             {selectedOption?.label || placeholder}
           </span>
         </div>
-        <ChevronDown 
+        <ChevronDown
           className={cn(
             'h-4 w-4 text-muted-foreground transition-transform duration-200',
             isOpen && 'rotate-180'
-          )} 
+          )}
         />
       </button>
 
@@ -150,7 +162,8 @@ export function Select({
                   'relative flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2.5 text-sm outline-none transition-all duration-200',
                   'hover:bg-accent hover:text-accent-foreground',
                   'focus:bg-accent focus:text-accent-foreground',
-                  selectedOption?.value === option.value && 'bg-accent text-accent-foreground'
+                  selectedOption?.value === option.value &&
+                    'bg-accent text-accent-foreground'
                 )}
                 role="option"
                 aria-selected={selectedOption?.value === option.value}
@@ -158,7 +171,9 @@ export function Select({
                 {option.icon && (
                   <option.icon className="h-4 w-4 flex-shrink-0" />
                 )}
-                <span className="flex-1 text-left font-medium">{option.label}</span>
+                <span className="flex-1 text-left font-medium">
+                  {option.label}
+                </span>
                 {selectedOption?.value === option.value && (
                   <Check className="h-4 w-4 text-primary" />
                 )}

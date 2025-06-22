@@ -9,7 +9,7 @@ import {
   DialogTitle,
   Button,
   Input,
-  Badge
+  Badge,
 } from '@/components/ui';
 import { useTranslation } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
@@ -18,7 +18,7 @@ import {
   convertToHex,
   validateColorFormat,
   copyToClipboard,
-  getContrastColor
+  getContrastColor,
 } from '@/utils';
 import type { ColorFormat } from '@/types';
 
@@ -40,7 +40,11 @@ interface ValidationState {
   isValidating: boolean;
 }
 
-const COLOR_FORMATS: { format: ColorFormat; label: string; placeholder: string }[] = [
+const COLOR_FORMATS: {
+  format: ColorFormat;
+  label: string;
+  placeholder: string;
+}[] = [
   { format: 'hex', label: 'HEX', placeholder: '#FF5733' },
   { format: 'rgb', label: 'RGB', placeholder: 'rgb(255, 87, 51)' },
   { format: 'rgba', label: 'RGBA', placeholder: 'rgba(255, 87, 51, 1)' },
@@ -53,7 +57,10 @@ const COLOR_FORMATS: { format: ColorFormat; label: string; placeholder: string }
 // 防抖延迟时间（毫秒）
 const DEBOUNCE_DELAY = 500;
 
-export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalProps) {
+export function ColorConverterModal({
+  open,
+  onOpenChange,
+}: ColorConverterModalProps) {
   const { t } = useTranslation();
   const { success } = useToast();
 
@@ -71,118 +78,136 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
   const isInitializedRef = useRef(false);
 
   // 初始化颜色值
-  const initializeColorValues = useCallback((hex: string) => {
-    const values: ColorValue[] = COLOR_FORMATS.map(({ format }) => {
+  const initializeColorValues = useCallback(
+    (hex: string) => {
+      const values: ColorValue[] = COLOR_FORMATS.map(({ format }) => {
+        try {
+          const value = formatColor(hex, format);
+          return {
+            format,
+            value,
+            isValid: true,
+          };
+        } catch (err) {
+          return {
+            format,
+            value: '',
+            isValid: false,
+            error: t('tools.colorConverter.conversionFailed'),
+          };
+        }
+      });
+      setColorValues(values);
+    },
+    [t]
+  );
+
+  // 验证和转换颜色（不使用toast，返回结果）
+  const validateAndConvert = useCallback(
+    (
+      value: string,
+      format: ColorFormat
+    ): {
+      isValid: boolean;
+      error?: string;
+      hex?: string;
+    } => {
+      if (!value.trim()) {
+        return { isValid: true };
+      }
+
       try {
-        const value = formatColor(hex, format);
+        // 验证输入格式
+        const isValid = validateColorFormat(value, format);
+        if (!isValid) {
+          return {
+            isValid: false,
+            error: t('tools.colorConverter.invalidFormat'),
+          };
+        }
+
+        // 转换为HEX
+        const hex = convertToHex(value, format);
+        if (!hex) {
+          return {
+            isValid: false,
+            error: t('tools.colorConverter.conversionFailed'),
+          };
+        }
+
         return {
-          format,
-          value,
           isValid: true,
+          hex,
         };
       } catch (err) {
         return {
-          format,
-          value: '',
           isValid: false,
           error: t('tools.colorConverter.conversionFailed'),
         };
       }
-    });
-    setColorValues(values);
-  }, [t]);
-
-  // 验证和转换颜色（不使用toast，返回结果）
-  const validateAndConvert = useCallback((value: string, format: ColorFormat): {
-    isValid: boolean;
-    error?: string;
-    hex?: string;
-  } => {
-    if (!value.trim()) {
-      return { isValid: true };
-    }
-
-    try {
-      // 验证输入格式
-      const isValid = validateColorFormat(value, format);
-      if (!isValid) {
-        return {
-          isValid: false,
-          error: t('tools.colorConverter.invalidFormat'),
-        };
-      }
-
-      // 转换为HEX
-      const hex = convertToHex(value, format);
-      if (!hex) {
-        return {
-          isValid: false,
-          error: t('tools.colorConverter.conversionFailed'),
-        };
-      }
-
-      return {
-        isValid: true,
-        hex,
-      };
-    } catch (err) {
-      return {
-        isValid: false,
-        error: t('tools.colorConverter.conversionFailed'),
-      };
-    }
-  }, [t]);
+    },
+    [t]
+  );
 
   // 防抖转换函数
-  const debouncedConvert = useCallback((value: string, format: ColorFormat) => {
-    // 清除之前的定时器
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // 如果输入为空，立即重置
-    if (!value.trim()) {
-      setValidationState({ isValid: true, isValidating: false });
-      initializeColorValues(currentHex);
-      return;
-    }
-
-    // 设置验证中状态
-    setValidationState(prev => ({ ...prev, isValidating: true }));
-
-    // 设置新的定时器
-    debounceTimerRef.current = setTimeout(() => {
-      const result = validateAndConvert(value, format);
-
-      setValidationState({
-        isValid: result.isValid,
-        error: result.error,
-        isValidating: false,
-      });
-
-      if (result.isValid && result.hex) {
-        setCurrentHex(result.hex);
-        initializeColorValues(result.hex);
+  const debouncedConvert = useCallback(
+    (value: string, format: ColorFormat) => {
+      // 清除之前的定时器
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-    }, DEBOUNCE_DELAY);
-  }, [validateAndConvert, initializeColorValues, currentHex]);
+
+      // 如果输入为空，立即重置
+      if (!value.trim()) {
+        setValidationState({ isValid: true, isValidating: false });
+        initializeColorValues(currentHex);
+        return;
+      }
+
+      // 设置验证中状态
+      setValidationState((prev) => ({ ...prev, isValidating: true }));
+
+      // 设置新的定时器
+      debounceTimerRef.current = setTimeout(() => {
+        const result = validateAndConvert(value, format);
+
+        setValidationState({
+          isValid: result.isValid,
+          error: result.error,
+          isValidating: false,
+        });
+
+        if (result.isValid && result.hex) {
+          setCurrentHex(result.hex);
+          initializeColorValues(result.hex);
+        }
+      }, DEBOUNCE_DELAY);
+    },
+    [validateAndConvert, initializeColorValues, currentHex]
+  );
 
   // 处理输入变化
-  const handleInputChange = useCallback((value: string) => {
-    setInputValue(value);
-    debouncedConvert(value, inputFormat);
-  }, [debouncedConvert, inputFormat]);
+  const handleInputChange = useCallback(
+    (value: string) => {
+      setInputValue(value);
+      debouncedConvert(value, inputFormat);
+    },
+    [debouncedConvert, inputFormat]
+  );
 
   // 处理格式变化
-  const handleFormatChange = useCallback((format: ColorFormat) => {
-    setInputFormat(format);
-    // 清除之前的验证状态
-    setValidationState({ isValid: true, isValidating: false });
+  const handleFormatChange = useCallback(
+    (format: ColorFormat) => {
+      setInputFormat(format);
+      // 清除之前的验证状态
+      setValidationState({ isValid: true, isValidating: false });
 
-    if (inputValue.trim()) {
-      debouncedConvert(inputValue, format);
-    }
-  }, [debouncedConvert, inputValue]);
+      if (inputValue.trim()) {
+        debouncedConvert(inputValue, format);
+      }
+    },
+    [debouncedConvert, inputValue]
+  );
 
   // 处理输入框失去焦点
   const handleInputBlur = useCallback(() => {
@@ -202,23 +227,35 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
         initializeColorValues(result.hex);
       }
     }
-  }, [validationState.isValidating, validateAndConvert, inputValue, inputFormat, initializeColorValues]);
+  }, [
+    validationState.isValidating,
+    validateAndConvert,
+    inputValue,
+    inputFormat,
+    initializeColorValues,
+  ]);
 
   // 处理回车键
-  const handleInputKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleInputBlur();
-    }
-  }, [handleInputBlur]);
+  const handleInputKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleInputBlur();
+      }
+    },
+    [handleInputBlur]
+  );
 
   // 复制颜色值
-  const handleCopy = useCallback(async (value: string, format: ColorFormat) => {
-    const copySuccess = await copyToClipboard(value);
-    if (copySuccess) {
-      success(`${t('tools.colorConverter.copySuccess')}: ${value}`);
-    }
-    // 移除复制失败的toast，因为用户可以看到复制是否成功
-  }, [success, t]);
+  const handleCopy = useCallback(
+    async (value: string, format: ColorFormat) => {
+      const copySuccess = await copyToClipboard(value);
+      if (copySuccess) {
+        success(`${t('tools.colorConverter.copySuccess')}: ${value}`);
+      }
+      // 移除复制失败的toast，因为用户可以看到复制是否成功
+    },
+    [success, t]
+  );
 
   // 重置
   const handleReset = useCallback(() => {
@@ -268,17 +305,19 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
         <div className="space-y-6">
           {/* 颜色预览 */}
           <div className="flex items-center gap-4">
-            <div 
+            <div
               className="w-20 h-20 rounded-lg border shadow-sm flex items-center justify-center text-sm font-medium"
-              style={{ 
+              style={{
                 backgroundColor: currentHex,
-                color: contrastColor 
+                color: contrastColor,
               }}
             >
               {currentHex}
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-medium mb-2">{t('tools.colorConverter.preview')}</h3>
+              <h3 className="text-sm font-medium mb-2">
+                {t('tools.colorConverter.preview')}
+              </h3>
               <p className="text-sm text-muted-foreground">
                 {t('tools.colorConverter.previewDescription')}
               </p>
@@ -287,12 +326,16 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
 
           {/* 输入区域 */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium">{t('tools.colorConverter.input')}</h3>
+            <h3 className="text-sm font-medium">
+              {t('tools.colorConverter.input')}
+            </h3>
             <div className="space-y-2">
               <div className="flex gap-2">
                 <select
                   value={inputFormat}
-                  onChange={(e) => handleFormatChange(e.target.value as ColorFormat)}
+                  onChange={(e) =>
+                    handleFormatChange(e.target.value as ColorFormat)
+                  }
                   className="px-3 py-2 border rounded-md bg-background text-sm min-w-[100px]"
                 >
                   {COLOR_FORMATS.map(({ format, label }) => (
@@ -307,9 +350,14 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
                     onChange={(e) => handleInputChange(e.target.value)}
                     onBlur={handleInputBlur}
                     onKeyDown={handleInputKeyDown}
-                    placeholder={COLOR_FORMATS.find(f => f.format === inputFormat)?.placeholder || ''}
+                    placeholder={
+                      COLOR_FORMATS.find((f) => f.format === inputFormat)
+                        ?.placeholder || ''
+                    }
                     className={`w-full ${
-                      !validationState.isValid ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                      !validationState.isValid
+                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                        : ''
                     }`}
                   />
                   {validationState.isValidating && (
@@ -348,20 +396,29 @@ export function ColorConverterModal({ open, onOpenChange }: ColorConverterModalP
 
           {/* 转换结果 */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium">{t('tools.colorConverter.results')}</h3>
+            <h3 className="text-sm font-medium">
+              {t('tools.colorConverter.results')}
+            </h3>
             <div className="grid gap-3">
               {colorValues.map(({ format, value, isValid, error }) => {
-                const formatInfo = COLOR_FORMATS.find(f => f.format === format);
+                const formatInfo = COLOR_FORMATS.find(
+                  (f) => f.format === format
+                );
                 return (
                   <div
                     key={format}
                     className="flex items-center gap-3 p-3 border rounded-lg bg-muted/30"
                   >
-                    <Badge variant="secondary" className="min-w-[80px] justify-center">
+                    <Badge
+                      variant="secondary"
+                      className="min-w-[80px] justify-center"
+                    >
                       {formatInfo?.label || format.toUpperCase()}
                     </Badge>
                     <div className="flex-1 font-mono text-sm">
-                      {isValid ? value : (
+                      {isValid ? (
+                        value
+                      ) : (
                         <span className="text-muted-foreground">
                           {error || t('tools.colorConverter.invalidValue')}
                         </span>

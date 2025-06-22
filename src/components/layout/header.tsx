@@ -11,7 +11,7 @@ import {
   Monitor,
   Grid3X3,
   List,
-  LayoutGrid
+  LayoutGrid,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useAppStore, useColorStore } from '@/store';
@@ -28,14 +28,9 @@ interface HeaderProps {
 export function Header({
   onSubmitColor,
   onSettings,
-  onBackToColors
+  onBackToColors,
 }: HeaderProps) {
-  const {
-    settings,
-    toggleSidebar,
-    setTheme,
-    setViewMode
-  } = useAppStore();
+  const { settings, toggleSidebar, setTheme, setViewMode } = useAppStore();
   const { colors, stats } = useColorStore();
   const { t } = useTranslation();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
@@ -79,7 +74,7 @@ export function Header({
           >
             <Menu className="h-5 w-5" />
           </Button>
-          
+
           <div
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={onBackToColors}
@@ -97,7 +92,9 @@ export function Header({
             <div>
               <h1 className="text-xl font-bold">GHS Color Next</h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                {settings.language === 'zh-CN' ? appConfig.description : appConfig.descriptionEn}
+                {settings.language === 'zh-CN'
+                  ? appConfig.description
+                  : appConfig.descriptionEn}
               </p>
             </div>
           </div>
@@ -133,14 +130,26 @@ export function Header({
             >
               <ViewIcon className="h-4 w-4" />
             </Button>
-            
+
             {showViewMenu && (
               <div className="absolute right-0 top-full mt-2 w-48 bg-popover border rounded-md shadow-lg z-[60]">
                 <div className="p-1">
                   {[
-                    { mode: 'grid' as ViewMode, label: t('viewMode.gridView'), icon: Grid3X3 },
-                    { mode: 'list' as ViewMode, label: t('viewMode.listView'), icon: List },
-                    { mode: 'compact' as ViewMode, label: t('viewMode.compactView'), icon: LayoutGrid },
+                    {
+                      mode: 'grid' as ViewMode,
+                      label: t('viewMode.gridView'),
+                      icon: Grid3X3,
+                    },
+                    {
+                      mode: 'list' as ViewMode,
+                      label: t('viewMode.listView'),
+                      icon: List,
+                    },
+                    {
+                      mode: 'compact' as ViewMode,
+                      label: t('viewMode.compactView'),
+                      icon: LayoutGrid,
+                    },
                   ].map(({ mode, label, icon: Icon }) => (
                     <button
                       key={mode}
@@ -168,14 +177,26 @@ export function Header({
             >
               <ThemeIcon className="h-4 w-4" />
             </Button>
-            
+
             {showThemeMenu && (
               <div className="absolute right-0 top-full mt-2 w-40 bg-popover border rounded-md shadow-lg z-[60]">
                 <div className="p-1">
                   {[
-                    { theme: 'light' as ThemeMode, label: t('theme.light'), icon: Sun },
-                    { theme: 'dark' as ThemeMode, label: t('theme.dark'), icon: Moon },
-                    { theme: 'system' as ThemeMode, label: t('theme.system'), icon: Monitor },
+                    {
+                      theme: 'light' as ThemeMode,
+                      label: t('theme.light'),
+                      icon: Sun,
+                    },
+                    {
+                      theme: 'dark' as ThemeMode,
+                      label: t('theme.dark'),
+                      icon: Moon,
+                    },
+                    {
+                      theme: 'system' as ThemeMode,
+                      label: t('theme.system'),
+                      icon: Monitor,
+                    },
                   ].map(({ theme, label, icon: Icon }) => (
                     <button
                       key={theme}

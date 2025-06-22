@@ -18,7 +18,7 @@ class SafeStorage {
   private checkAvailability(): boolean {
     try {
       if (typeof window === 'undefined') return false;
-      
+
       const test = '__storage_test__';
       localStorage.setItem(test, test);
       localStorage.removeItem(test);
@@ -53,7 +53,7 @@ class SafeStorage {
     try {
       const item = localStorage.getItem(key);
       if (item === null) return defaultValue || null;
-      
+
       return JSON.parse(item) as T;
     } catch (error) {
       console.warn('Failed to read from localStorage:', error);
@@ -143,19 +143,19 @@ export const STORAGE_KEYS = {
   // 应用设置
   APP_SETTINGS: 'ghs-color-app-settings',
   USER_PREFERENCES: 'ghs-color-user-preferences',
-  
+
   // 颜色数据
   COLORS: 'ghs-color-colors',
   CATEGORIES: 'ghs-color-categories',
-  
+
   // UI状态
   SIDEBAR_STATE: 'ghs-color-sidebar-state',
   THEME: 'ghs-color-theme',
-  
+
   // 缓存
   RECENT_SEARCHES: 'ghs-color-recent-searches',
   RECENT_COLORS: 'ghs-color-recent-colors',
-  
+
   // 备份
   BACKUP_PREFIX: 'ghs-color-backup-',
 } as const;
@@ -172,7 +172,7 @@ export class BackupManager {
   createBackup(data: any, name?: string): boolean {
     const timestamp = new Date().toISOString();
     const backupKey = `${STORAGE_KEYS.BACKUP_PREFIX}${name || timestamp}`;
-    
+
     const backupData = {
       timestamp,
       name: name || `自动备份 ${new Date().toLocaleString()}`,
@@ -180,11 +180,11 @@ export class BackupManager {
     };
 
     const success = storage.setItem(backupKey, backupData);
-    
+
     if (success) {
       this.cleanupOldBackups();
     }
-    
+
     return success;
   }
 
@@ -198,29 +198,36 @@ export class BackupManager {
     data: any;
   }> {
     const allKeys = storage.getAllKeys();
-    const backupKeys = allKeys.filter(key => key.startsWith(STORAGE_KEYS.BACKUP_PREFIX));
-    
-    const backups = backupKeys
-      .map(key => {
-        const backup = storage.getItem(key);
-        return backup ? { key, ...backup } : null;
-      })
-      .filter(Boolean)
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const backupKeys = allKeys.filter((key) =>
+      key.startsWith(STORAGE_KEYS.BACKUP_PREFIX)
+    );
 
-    return backups as Array<{
+    type BackupItem = {
       key: string;
       timestamp: string;
       name: string;
       data: any;
-    }>;
+    };
+
+    const backups = backupKeys
+      .map((key) => {
+        const backup = storage.getItem(key);
+        return backup ? ({ key, ...backup } as BackupItem) : null;
+      })
+      .filter((backup): backup is BackupItem => backup !== null)
+      .sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+
+    return backups;
   }
 
   /**
    * 恢复备份
    */
   restoreBackup(backupKey: string): any | null {
-    const backup = storage.getItem(backupKey);
+    const backup = storage.getItem(backupKey) as { data: any } | null;
     return backup ? backup.data : null;
   }
 
@@ -236,10 +243,10 @@ export class BackupManager {
    */
   private cleanupOldBackups(): void {
     const backups = this.getBackups();
-    
+
     if (backups.length > this.maxBackups) {
       const toDelete = backups.slice(this.maxBackups);
-      toDelete.forEach(backup => {
+      toDelete.forEach((backup) => {
         storage.removeItem(backup.key);
       });
     }
@@ -270,7 +277,7 @@ export class CacheManager {
   set<T>(key: string, value: T, ttl?: number): boolean {
     const cacheKey = this.prefix + key;
     const expiresAt = Date.now() + (ttl || this.defaultTTL);
-    
+
     const cacheData = {
       value,
       expiresAt,
@@ -284,17 +291,20 @@ export class CacheManager {
    */
   get<T>(key: string): T | null {
     const cacheKey = this.prefix + key;
-    const cacheData = storage.getItem(cacheKey);
-    
+    const cacheData = storage.getItem(cacheKey) as {
+      value: T;
+      expiresAt: number;
+    } | null;
+
     if (!cacheData) return null;
-    
+
     // 检查是否过期
     if (Date.now() > cacheData.expiresAt) {
       storage.removeItem(cacheKey);
       return null;
     }
-    
-    return cacheData.value as T;
+
+    return cacheData.value;
   }
 
   /**
@@ -310,10 +320,10 @@ export class CacheManager {
    */
   cleanup(): void {
     const allKeys = storage.getAllKeys();
-    const cacheKeys = allKeys.filter(key => key.startsWith(this.prefix));
-    
-    cacheKeys.forEach(key => {
-      const cacheData = storage.getItem(key);
+    const cacheKeys = allKeys.filter((key) => key.startsWith(this.prefix));
+
+    cacheKeys.forEach((key) => {
+      const cacheData = storage.getItem(key) as { expiresAt: number } | null;
       if (cacheData && Date.now() > cacheData.expiresAt) {
         storage.removeItem(key);
       }
@@ -325,9 +335,9 @@ export class CacheManager {
    */
   clear(): void {
     const allKeys = storage.getAllKeys();
-    const cacheKeys = allKeys.filter(key => key.startsWith(this.prefix));
-    
-    cacheKeys.forEach(key => {
+    const cacheKeys = allKeys.filter((key) => key.startsWith(this.prefix));
+
+    cacheKeys.forEach((key) => {
       storage.removeItem(key);
     });
   }
@@ -338,7 +348,10 @@ export const cacheManager = new CacheManager();
 
 // 定期清理过期缓存
 if (typeof window !== 'undefined') {
-  setInterval(() => {
-    cacheManager.cleanup();
-  }, 60 * 60 * 1000); // 每小时清理一次
+  setInterval(
+    () => {
+      cacheManager.cleanup();
+    },
+    60 * 60 * 1000
+  ); // 每小时清理一次
 }

@@ -60,7 +60,7 @@ export function detectBrowserLanguage(): Language {
   }
 
   const browserLang = navigator.language || navigator.languages?.[0];
-  
+
   // 精确匹配
   if (supportedLanguages.includes(browserLang as Language)) {
     return browserLang as Language;
@@ -68,8 +68,10 @@ export function detectBrowserLanguage(): Language {
 
   // 语言代码匹配（如 'en' 匹配 'en-US'）
   const langCode = browserLang?.split('-')[0];
-  const matchedLang = supportedLanguages.find(lang => lang.startsWith(langCode));
-  
+  const matchedLang = supportedLanguages.find((lang) =>
+    lang.startsWith(langCode)
+  );
+
   return matchedLang || defaultLanguage;
 }
 
@@ -86,7 +88,10 @@ export const languageCountryCodes: Record<Language, string> = {
 };
 
 // 语言配置（包含名称和国家代码）
-export const languageConfig: Record<Language, { name: string; countryCode: string; locale: string }> = {
+export const languageConfig: Record<
+  Language,
+  { name: string; countryCode: string; locale: string }
+> = {
   'zh-CN': {
     name: languageNames['zh-CN'],
     countryCode: languageCountryCodes['zh-CN'],

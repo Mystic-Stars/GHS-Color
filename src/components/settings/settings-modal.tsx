@@ -12,7 +12,7 @@ import {
   Palette,
   Eye,
   Languages,
-  Globe
+  Globe,
 } from 'lucide-react';
 import {
   Dialog,
@@ -22,7 +22,7 @@ import {
   Button,
   Select,
   FlagIcon,
-  type SelectOption
+  type SelectOption,
 } from '@/components/ui';
 import { useAppStore } from '@/store';
 import { useTranslation } from '@/hooks/use-translation';
@@ -47,17 +47,23 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   const viewModeOptions = [
     { value: 'grid' as ViewMode, label: t('viewMode.grid'), icon: Grid3X3 },
     { value: 'list' as ViewMode, label: t('viewMode.list'), icon: List },
-    { value: 'compact' as ViewMode, label: t('viewMode.compact'), icon: LayoutGrid },
+    {
+      value: 'compact' as ViewMode,
+      label: t('viewMode.compact'),
+      icon: LayoutGrid,
+    },
   ];
 
   // 创建带国旗的语言选项
-  const languageOptions: SelectOption[] = Object.entries(languageConfig).map(([code, config]) => ({
-    value: code,
-    label: config.name,
-    icon: ({ className }: { className?: string }) => (
-      <FlagIcon countryCode={config.countryCode} className={className} />
-    ),
-  }));
+  const languageOptions: SelectOption[] = Object.entries(languageConfig).map(
+    ([code, config]) => ({
+      value: code,
+      label: config.name,
+      icon: ({ className }: { className?: string }) => (
+        <FlagIcon countryCode={config.countryCode} className={className} />
+      ),
+    })
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,8 +83,12 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                 <Palette className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-medium text-foreground">{t('settings.theme')}</h3>
-                <p className="text-xs text-muted-foreground">{t('settings.themeDescription')}</p>
+                <h3 className="text-sm font-medium text-foreground">
+                  {t('settings.theme')}
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.themeDescription')}
+                </p>
               </div>
             </div>
             <div className="settings-button-group">
@@ -90,7 +100,9 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                     key={option.value}
                     onClick={() => setTheme(option.value)}
                     className={`settings-button ${
-                      isSelected ? 'settings-button-active' : 'settings-button-inactive'
+                      isSelected
+                        ? 'settings-button-active'
+                        : 'settings-button-inactive'
                     }`}
                     title={option.label}
                   >
@@ -109,8 +121,12 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-medium text-foreground">{t('settings.viewMode')}</h3>
-                <p className="text-xs text-muted-foreground">{t('settings.viewModeDescription')}</p>
+                <h3 className="text-sm font-medium text-foreground">
+                  {t('settings.viewMode')}
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.viewModeDescription')}
+                </p>
               </div>
             </div>
             <div className="settings-button-group">
@@ -122,7 +138,9 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                     key={option.value}
                     onClick={() => setViewMode(option.value)}
                     className={`settings-button ${
-                      isSelected ? 'settings-button-active' : 'settings-button-inactive'
+                      isSelected
+                        ? 'settings-button-active'
+                        : 'settings-button-inactive'
                     }`}
                     title={option.label}
                   >
@@ -141,8 +159,12 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                 <Languages className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-medium text-foreground">{t('settings.language')}</h3>
-                <p className="text-xs text-muted-foreground">{t('settings.languageDescription')}</p>
+                <h3 className="text-sm font-medium text-foreground">
+                  {t('settings.language')}
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.languageDescription')}
+                </p>
               </div>
             </div>
             <Select

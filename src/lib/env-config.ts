@@ -8,21 +8,35 @@ export const appConfig = {
   name: process.env.NEXT_PUBLIC_APP_NAME || 'GHS Color Next',
   version: process.env.NEXT_PUBLIC_APP_VERSION || '2.0.0',
   description: process.env.NEXT_PUBLIC_APP_DESCRIPTION || '现代化色彩管理工具',
-  descriptionEn: process.env.NEXT_PUBLIC_APP_DESCRIPTION_EN || 'Modern Color Management Tool',
-  githubUrl: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/Mystic-Stars/GHS-Color',
+  descriptionEn:
+    process.env.NEXT_PUBLIC_APP_DESCRIPTION_EN ||
+    'Modern Color Management Tool',
+  githubUrl:
+    process.env.NEXT_PUBLIC_GITHUB_URL ||
+    'https://github.com/Mystic-Stars/GHS-Color',
 
   // 页面配置 - 支持多语言
   site: {
     // 中文配置
-    title: process.env.NEXT_PUBLIC_SITE_TITLE || 'GHS Color Next - 现代化色彩管理工具',
-    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || '基于原版GHS Color重构的现代化色彩管理工具',
+    title:
+      process.env.NEXT_PUBLIC_SITE_TITLE ||
+      'GHS Color Next - 现代化色彩管理工具',
+    description:
+      process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+      '基于原版GHS Color重构的现代化色彩管理工具',
 
     // 英文配置
-    titleEn: process.env.NEXT_PUBLIC_SITE_TITLE_EN || 'GHS Color Next - Modern Color Management Tool',
-    descriptionEn: process.env.NEXT_PUBLIC_SITE_DESCRIPTION_EN || 'A modern color management tool based on the original GHS Color, supporting multiple color formats, theme switching, multi-language and more',
+    titleEn:
+      process.env.NEXT_PUBLIC_SITE_TITLE_EN ||
+      'GHS Color Next - Modern Color Management Tool',
+    descriptionEn:
+      process.env.NEXT_PUBLIC_SITE_DESCRIPTION_EN ||
+      'A modern color management tool based on the original GHS Color, supporting multiple color formats, theme switching, multi-language and more',
 
     // 关键字（通用，不需要多语言）
-    keywords: process.env.NEXT_PUBLIC_SITE_KEYWORDS || 'GHS Color,color management,color tool,design tool,color picker,palette,颜色管理,色彩工具',
+    keywords:
+      process.env.NEXT_PUBLIC_SITE_KEYWORDS ||
+      'GHS Color,color management,color tool,design tool,color picker,palette,颜色管理,色彩工具',
   },
 };
 
@@ -38,28 +52,30 @@ export function loadColorsFromEnv(): ExtendedColor[] {
     }
 
     const rawColors = JSON.parse(colorsJson);
-    
+
     // 转换为完整的ExtendedColor格式
-    const colors: ExtendedColor[] = rawColors.map((color: any, index: number) => {
-      const hex = color.hex || '#000000';
-      return {
-        id: color.id || `color-${index}`,
-        name: color.name || 'Unnamed Color',
-        nameZh: color.nameZh || '未命名颜色',
-        hex,
-        description: color.description || '',
-        descriptionZh: color.descriptionZh || '',
-        temperature: getColorTemperature(hex), // 自动计算颜色温度
-        category: color.category,
-        tags: color.tags || [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        isFavorite: false,
-        usageCount: 0,
-        rgb: color.rgb,
-        hsl: color.hsl,
-      };
-    });
+    const colors: ExtendedColor[] = rawColors.map(
+      (color: any, index: number) => {
+        const hex = color.hex || '#000000';
+        return {
+          id: color.id || `color-${index}`,
+          name: color.name || 'Unnamed Color',
+          nameZh: color.nameZh || '未命名颜色',
+          hex,
+          description: color.description || '',
+          descriptionZh: color.descriptionZh || '',
+          temperature: getColorTemperature(hex), // 自动计算颜色温度
+          category: color.category,
+          tags: color.tags || [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          isFavorite: false,
+          usageCount: 0,
+          rgb: color.rgb,
+          hsl: color.hsl,
+        };
+      }
+    );
 
     return colors;
   } catch (error) {
@@ -90,7 +106,10 @@ export function loadCategoriesFromEnv(): ColorCategory[] {
       order: category.order || 0,
     }));
   } catch (error) {
-    console.error('Failed to load categories from environment variables:', error);
+    console.error(
+      'Failed to load categories from environment variables:',
+      error
+    );
     return getDefaultCategories();
   }
 }
@@ -137,7 +156,7 @@ export const submitGuideConfig = {
   githubUrl: appConfig.githubUrl,
   issueUrl: `${appConfig.githubUrl}/issues/new`,
   contributingUrl: `${appConfig.githubUrl}/blob/main/CONTRIBUTING.md`,
-  
+
   // 提交模板
   issueTemplate: {
     title: '新颜色提交申请',

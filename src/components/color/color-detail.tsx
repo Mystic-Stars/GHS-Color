@@ -2,10 +2,25 @@
 
 import React, { useState } from 'react';
 import { Heart, Copy, Edit, Trash2, Palette } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Input } from '@/components/ui';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Badge,
+  Input,
+} from '@/components/ui';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatColor, getContrastColor, copyToClipboard, generateSimilarColors, getCategoryIcon, getTemperatureIcon } from '@/utils';
+import {
+  formatColor,
+  getContrastColor,
+  copyToClipboard,
+  generateSimilarColors,
+  getCategoryIcon,
+  getTemperatureIcon,
+} from '@/utils';
 import type { ExtendedColor, ColorFormat } from '@/types';
 
 interface ColorDetailProps {
@@ -19,7 +34,7 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
   const { settings } = useAppStore();
   const { t } = useTranslation();
   const [showSimilarColors, setShowSimilarColors] = useState(false);
-  
+
   const contrastColor = getContrastColor(color.hex);
   const similarColors = generateSimilarColors(color.hex, 8);
 
@@ -33,7 +48,7 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
   const handleCopyColor = async (format: ColorFormat) => {
     const formattedColor = formatColor(color.hex, format);
     const success = await copyToClipboard(formattedColor);
-    
+
     if (success) {
       incrementUsage(color.id);
       // TODO: 显示复制成功的提示
@@ -59,13 +74,15 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
                 size="icon"
                 variant="ghost"
                 className="backdrop-blur-sm"
-                style={{ 
+                style={{
                   backgroundColor: `${contrastColor}20`,
-                  color: contrastColor 
+                  color: contrastColor,
                 }}
                 onClick={handleToggleFavorite}
               >
-                <Heart className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`} />
+                <Heart
+                  className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`}
+                />
               </Button>
               <Button
                 size="icon"
@@ -73,7 +90,7 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
                 className="backdrop-blur-sm"
                 style={{
                   backgroundColor: `${contrastColor}20`,
-                  color: contrastColor
+                  color: contrastColor,
                 }}
                 onClick={onEdit}
                 title={t('color.submitSimilarColor')}
@@ -84,7 +101,10 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
 
             {/* 颜色值显示 */}
             <div className="absolute bottom-4 left-4">
-              <div className="text-2xl font-bold" style={{ color: contrastColor }}>
+              <div
+                className="text-2xl font-bold"
+                style={{ color: contrastColor }}
+              >
                 {color.hex.toUpperCase()}
               </div>
             </div>
@@ -97,7 +117,9 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
                 {settings.language === 'zh-CN' ? color.nameZh : color.name}
               </h2>
               <p className="text-muted-foreground">
-                {settings.language === 'zh-CN' ? color.descriptionZh : color.description}
+                {settings.language === 'zh-CN'
+                  ? color.descriptionZh
+                  : color.description}
               </p>
             </div>
 
@@ -107,23 +129,36 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
               <div className="flex flex-wrap gap-2">
                 {color.category && (
                   <Badge variant="outline" className="font-medium">
-                    <span className="mr-1.5">{getCategoryIcon(color.category)}</span>
-                    {color.category === 'brand' ? t('color.brand') :
-                     color.category === 'ui' ? t('color.ui') :
-                     color.category === 'team' ? t('color.team') : color.category}
+                    <span className="mr-1.5">
+                      {getCategoryIcon(color.category)}
+                    </span>
+                    {color.category === 'brand'
+                      ? t('color.brand')
+                      : color.category === 'ui'
+                        ? t('color.ui')
+                        : color.category === 'team'
+                          ? t('color.team')
+                          : color.category}
                   </Badge>
                 )}
                 <Badge variant="outline" className="font-medium">
-                  <span className="mr-1.5">{getTemperatureIcon(color.temperature)}</span>
-                  {color.temperature === 'warm' ? t('color.warm') :
-                   color.temperature === 'cool' ? t('color.cool') : t('color.neutral')}
+                  <span className="mr-1.5">
+                    {getTemperatureIcon(color.temperature)}
+                  </span>
+                  {color.temperature === 'warm'
+                    ? t('color.warm')
+                    : color.temperature === 'cool'
+                      ? t('color.cool')
+                      : t('color.neutral')}
                 </Badge>
               </div>
 
               {/* 标签 */}
               {color.tags && color.tags.length > 0 && (
                 <div className="space-y-1">
-                  <span className="text-xs text-muted-foreground font-medium">{t('color.tags')}</span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {t('color.tags')}
+                  </span>
                   <div className="flex flex-wrap gap-1.5">
                     {color.tags.map((tag) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
@@ -138,7 +173,10 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
             {/* 使用统计 */}
             <div className="text-sm text-muted-foreground">
               {t('color.usageCount')}: {color.usageCount || 0} |
-              {t('color.createdAt')}: {color.createdAt ? new Date(color.createdAt).toLocaleDateString() : t('color.unknown')}
+              {t('color.createdAt')}:{' '}
+              {color.createdAt
+                ? new Date(color.createdAt).toLocaleDateString()
+                : t('color.unknown')}
             </div>
           </div>
         </CardContent>
@@ -153,7 +191,10 @@ export function ColorDetail({ color, onEdit, onDelete }: ColorDetailProps) {
           {colorFormats.map(({ format, label }) => {
             const formattedValue = formatColor(color.hex, format);
             return (
-              <div key={format} className="flex items-center justify-between p-3 border rounded-lg">
+              <div
+                key={format}
+                className="flex items-center justify-between p-3 border rounded-lg"
+              >
                 <div>
                   <div className="font-medium">{label}</div>
                   <div className="text-sm text-muted-foreground font-mono">

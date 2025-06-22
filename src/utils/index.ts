@@ -49,9 +49,4 @@ export {
 } from './keyboard';
 
 // 存储工具
-export {
-  storage,
-  backupManager,
-  cacheManager,
-  STORAGE_KEYS,
-} from './storage';
+export { storage, backupManager, cacheManager, STORAGE_KEYS } from './storage';

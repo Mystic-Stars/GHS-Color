@@ -135,15 +135,18 @@ export const enUS = {
   // Submit Guide
   submitGuide: {
     title: 'Submit New Color',
-    description: 'Thank you for contributing new colors to the GHS Color project! Please follow these steps to submit your color suggestions.',
+    description:
+      'Thank you for contributing new colors to the GHS Color project! Please follow these steps to submit your color suggestions.',
     steps: {
       title: 'Submission Steps',
       step1: 'Visit GitHub Repository',
-      step1Description: 'First, visit our GitHub repository to understand the project:',
+      step1Description:
+        'First, visit our GitHub repository to understand the project:',
       step2: 'Create Issue',
       step2Description: 'Create a new Issue on GitHub to submit your color:',
       step3: 'Fill Color Information',
-      step3Description: 'Fill in complete color information according to the template:',
+      step3Description:
+        'Fill in complete color information according to the template:',
       step4: 'Wait for Review',
       step4Description: 'We will review your submission as soon as possible:',
     },
@@ -175,7 +178,8 @@ export const enUS = {
       viewIssues: 'View All Issues',
     },
     backToColors: 'Back to Color Management',
-    thanks: 'Thank you for contributing to the GHS Color project! Every color suggestion makes this tool better.',
+    thanks:
+      'Thank you for contributing to the GHS Color project! Every color suggestion makes this tool better.',
   },
 
   // Tools
@@ -188,8 +192,10 @@ export const enUS = {
       results: 'Conversion Results',
       preview: 'Color Preview',
       previewDescription: 'Real-time preview of the current color',
-      usage: 'Enter a color value in any format in the input field above, and the system will automatically convert it to other formats.',
-      supportedFormats: 'Supports HEX, RGB, RGBA, HSL, HSLA, HSV, and CSS variable formats.',
+      usage:
+        'Enter a color value in any format in the input field above, and the system will automatically convert it to other formats.',
+      supportedFormats:
+        'Supports HEX, RGB, RGBA, HSL, HSLA, HSV, and CSS variable formats.',
       copySuccess: 'Color value copied',
       copyFailed: 'Copy failed',
       invalidFormat: 'Invalid color format',

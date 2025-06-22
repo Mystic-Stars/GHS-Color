@@ -2,18 +2,25 @@
 
 import React, { useState } from 'react';
 import { Heart, Copy, Edit, Palette } from 'lucide-react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
-  Button, 
-  Badge 
+  Button,
+  Badge,
 } from '@/components/ui';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
-import { formatColor, getContrastColor, copyToClipboard, generateSimilarColors, getCategoryIcon, getTemperatureIcon } from '@/utils';
+import {
+  formatColor,
+  getContrastColor,
+  copyToClipboard,
+  generateSimilarColors,
+  getCategoryIcon,
+  getTemperatureIcon,
+} from '@/utils';
 import type { ExtendedColor, ColorFormat } from '@/types';
 
 interface ColorDetailModalProps {
@@ -23,16 +30,21 @@ interface ColorDetailModalProps {
   onEdit?: () => void;
 }
 
-export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDetailModalProps) {
+export function ColorDetailModal({
+  color,
+  open,
+  onOpenChange,
+  onEdit,
+}: ColorDetailModalProps) {
   const { toggleFavorite, incrementUsage } = useColorStore();
   const { settings } = useAppStore();
   const { t } = useTranslation();
   const { getLocalizedText } = useLocalizedText();
   const { success } = useToast();
   const [showSimilarColors, setShowSimilarColors] = useState(false);
-  
+
   if (!color) return null;
-  
+
   const contrastColor = getContrastColor(color.hex);
   const similarColors = generateSimilarColors(color.hex, 8);
 
@@ -67,7 +79,7 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <div 
+            <div
               className="w-6 h-6 rounded-full border-2 border-border"
               style={{ backgroundColor: color.hex }}
             />
@@ -88,13 +100,15 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
                   size="icon"
                   variant="ghost"
                   className="backdrop-blur-sm"
-                  style={{ 
+                  style={{
                     backgroundColor: `${contrastColor}20`,
-                    color: contrastColor 
+                    color: contrastColor,
                   }}
                   onClick={handleToggleFavorite}
                 >
-                  <Heart className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`} />
+                  <Heart
+                    className={`h-4 w-4 ${color.isFavorite ? 'fill-current' : ''}`}
+                  />
                 </Button>
                 <Button
                   size="icon"
@@ -102,7 +116,7 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
                   className="backdrop-blur-sm"
                   style={{
                     backgroundColor: `${contrastColor}20`,
-                    color: contrastColor
+                    color: contrastColor,
                   }}
                   onClick={handleEdit}
                   title={t('color.submitSimilarColor')}
@@ -113,12 +127,12 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
 
               {/* 颜色值显示 */}
               <div className="absolute bottom-4 left-4">
-                <Badge 
+                <Badge
                   variant="secondary"
                   className="backdrop-blur-sm text-lg px-3 py-1"
-                  style={{ 
+                  style={{
                     backgroundColor: `${contrastColor}20`,
-                    color: contrastColor 
+                    color: contrastColor,
                   }}
                 >
                   {color.hex.toUpperCase()}
@@ -134,7 +148,9 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
                 {settings.language === 'zh-CN' ? color.nameZh : color.name}
               </h3>
               <p className="text-muted-foreground">
-                {settings.language === 'zh-CN' ? color.descriptionZh : color.description}
+                {settings.language === 'zh-CN'
+                  ? color.descriptionZh
+                  : color.description}
               </p>
             </div>
 
@@ -142,20 +158,33 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
             <div className="space-y-3">
               {/* 分类和温度 */}
               <div className="space-y-2">
-                <h4 className="font-medium">{t('color.categoriesAndTemperature')}</h4>
+                <h4 className="font-medium">
+                  {t('color.categoriesAndTemperature')}
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {color.category && (
                     <Badge variant="outline" className="font-medium">
-                      <span className="mr-1.5">{getCategoryIcon(color.category)}</span>
-                      {color.category === 'brand' ? t('color.brand') :
-                       color.category === 'ui' ? t('color.ui') :
-                       color.category === 'team' ? t('color.team') : color.category}
+                      <span className="mr-1.5">
+                        {getCategoryIcon(color.category)}
+                      </span>
+                      {color.category === 'brand'
+                        ? t('color.brand')
+                        : color.category === 'ui'
+                          ? t('color.ui')
+                          : color.category === 'team'
+                            ? t('color.team')
+                            : color.category}
                     </Badge>
                   )}
                   <Badge variant="outline" className="font-medium">
-                    <span className="mr-1.5">{getTemperatureIcon(color.temperature)}</span>
-                    {color.temperature === 'warm' ? t('color.warm') :
-                     color.temperature === 'cool' ? t('color.cool') : t('color.neutral')}
+                    <span className="mr-1.5">
+                      {getTemperatureIcon(color.temperature)}
+                    </span>
+                    {color.temperature === 'warm'
+                      ? t('color.warm')
+                      : color.temperature === 'cool'
+                        ? t('color.cool')
+                        : t('color.neutral')}
                   </Badge>
                 </div>
               </div>
@@ -204,12 +233,20 @@ export function ColorDetailModal({ color, open, onOpenChange, onEdit }: ColorDet
               <h4 className="font-medium">{t('color.usageStats')}</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">{t('color.usageCount')}:</span>
-                  <span className="ml-2 font-medium">{color.usageCount || 0}</span>
+                  <span className="text-muted-foreground">
+                    {t('color.usageCount')}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {color.usageCount || 0}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">{t('color.isFavorite')}:</span>
-                  <span className="ml-2 font-medium">{color.isFavorite ? t('common.yes') : t('common.no')}</span>
+                  <span className="text-muted-foreground">
+                    {t('color.isFavorite')}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {color.isFavorite ? t('common.yes') : t('common.no')}
+                  </span>
                 </div>
               </div>
             </div>

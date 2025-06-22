@@ -172,7 +172,7 @@ export const sampleColors: ExtendedColor[] = [
     'zzh Blue',
     '周周蓝',
     '#1f91dc',
-    'Turquoise depths with azure meet, A sea\'s calm whisper, soft and sweet.',
+    "Turquoise depths with azure meet, A sea's calm whisper, soft and sweet.",
     '碧水深流，海面一抹幽蓝。',
     'brand',
     ['brand', 'blue', 'ocean', 'calm'],

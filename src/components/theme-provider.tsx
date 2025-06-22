@@ -10,9 +10,9 @@ interface ThemeProviderContextType {
   resolvedTheme: 'light' | 'dark';
 }
 
-const ThemeProviderContext = createContext<ThemeProviderContextType | undefined>(
-  undefined
-);
+const ThemeProviderContext = createContext<
+  ThemeProviderContextType | undefined
+>(undefined);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -57,7 +57,7 @@ export function ThemeProvider({
     setAppTheme(theme);
     const resolved = resolveTheme(theme);
     applyTheme(resolved);
-    
+
     // 保存到localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem(storageKey, theme);
@@ -67,7 +67,7 @@ export function ThemeProvider({
   // 初始化主题
   useEffect(() => {
     let initialTheme = settings.theme;
-    
+
     // 从localStorage读取主题设置
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey) as ThemeMode;
@@ -76,7 +76,7 @@ export function ThemeProvider({
         setAppTheme(stored);
       }
     }
-    
+
     const resolved = resolveTheme(initialTheme);
     applyTheme(resolved);
   }, []);
@@ -86,7 +86,7 @@ export function ThemeProvider({
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = () => {
       if (settings.theme === 'system') {
         const resolved = resolveTheme('system');

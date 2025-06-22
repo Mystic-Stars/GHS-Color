@@ -11,6 +11,13 @@ export type {
   ColorStats,
   ColorTemperature,
   ColorFormat,
+  RGBColor,
+  RGBAColor,
+  HSLColor,
+  HSLAColor,
+  HSVColor,
+  ColorConverterInput,
+  ColorConverterOutput,
 } from './color';
 
 // 应用相关类型

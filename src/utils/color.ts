@@ -1,9 +1,19 @@
-import type { ColorFormat, ColorTemperature, RGBColor, RGBAColor, HSLColor, HSLAColor, HSVColor } from '@/types';
+import type {
+  ColorFormat,
+  ColorTemperature,
+  RGBColor,
+  RGBAColor,
+  HSLColor,
+  HSLAColor,
+  HSVColor,
+} from '@/types';
 
 /**
  * HEX转RGB
  */
-export function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+export function hexToRgb(
+  hex: string
+): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -24,7 +34,9 @@ export function rgbToHex(r: number, g: number, b: number): string {
 /**
  * HEX转HSL
  */
-export function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
+export function hexToHsl(
+  hex: string
+): { h: number; s: number; l: number } | null {
   const rgb = hexToRgb(hex);
   if (!rgb) return null;
 
@@ -261,7 +273,10 @@ export function getTemperatureIcon(temperature: ColorTemperature): string {
 /**
  * 生成颜色的相似色
  */
-export function generateSimilarColors(hex: string, count: number = 5): string[] {
+export function generateSimilarColors(
+  hex: string,
+  count: number = 5
+): string[] {
   const hsl = hexToHsl(hex);
   if (!hsl) return [];
 
@@ -450,35 +465,45 @@ export function isValidRgb(rgb: string): boolean {
  * 验证RGBA格式
  */
 export function isValidRgba(rgba: string): boolean {
-  return /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d+)\s*\)$/i.test(rgba);
+  return /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d+)\s*\)$/i.test(
+    rgba
+  );
 }
 
 /**
  * 验证HSL格式
  */
 export function isValidHsl(hsl: string): boolean {
-  return /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i.test(hsl);
+  return /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i.test(
+    hsl
+  );
 }
 
 /**
  * 验证HSLA格式
  */
 export function isValidHsla(hsla: string): boolean {
-  return /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(0|1|0?\.\d+)\s*\)$/i.test(hsla);
+  return /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(0|1|0?\.\d+)\s*\)$/i.test(
+    hsla
+  );
 }
 
 /**
  * 验证HSV格式
  */
 export function isValidHsv(hsv: string): boolean {
-  return /^hsv\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i.test(hsv);
+  return /^hsv\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i.test(
+    hsv
+  );
 }
 
 /**
  * 解析RGB字符串
  */
 export function parseRgb(rgb: string): RGBColor | null {
-  const match = rgb.match(/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i);
+  const match = rgb.match(
+    /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i
+  );
   if (!match) return null;
 
   const r = parseInt(match[1], 10);
@@ -494,7 +519,9 @@ export function parseRgb(rgb: string): RGBColor | null {
  * 解析RGBA字符串
  */
 export function parseRgba(rgba: string): RGBAColor | null {
-  const match = rgba.match(/^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d+)\s*\)$/i);
+  const match = rgba.match(
+    /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(0|1|0?\.\d+)\s*\)$/i
+  );
   if (!match) return null;
 
   const r = parseInt(match[1], 10);
@@ -511,7 +538,9 @@ export function parseRgba(rgba: string): RGBAColor | null {
  * 解析HSL字符串
  */
 export function parseHsl(hsl: string): HSLColor | null {
-  const match = hsl.match(/^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i);
+  const match = hsl.match(
+    /^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i
+  );
   if (!match) return null;
 
   const h = parseInt(match[1], 10);
@@ -527,7 +556,9 @@ export function parseHsl(hsl: string): HSLColor | null {
  * 解析HSLA字符串
  */
 export function parseHsla(hsla: string): HSLAColor | null {
-  const match = hsla.match(/^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(0|1|0?\.\d+)\s*\)$/i);
+  const match = hsla.match(
+    /^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*(0|1|0?\.\d+)\s*\)$/i
+  );
   if (!match) return null;
 
   const h = parseInt(match[1], 10);
@@ -544,7 +575,9 @@ export function parseHsla(hsla: string): HSLAColor | null {
  * 解析HSV字符串
  */
 export function parseHsv(hsv: string): HSVColor | null {
-  const match = hsv.match(/^hsv\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i);
+  const match = hsv.match(
+    /^hsv\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/i
+  );
   if (!match) return null;
 
   const h = parseInt(match[1], 10);
@@ -559,7 +592,10 @@ export function parseHsv(hsv: string): HSVColor | null {
 /**
  * 将任意颜色格式转换为HEX
  */
-export function convertToHex(value: string, format: ColorFormat): string | null {
+export function convertToHex(
+  value: string,
+  format: ColorFormat
+): string | null {
   switch (format) {
     case 'hex':
       return isValidHex(value) ? normalizeHex(value) : null;
@@ -591,7 +627,10 @@ export function convertToHex(value: string, format: ColorFormat): string | null 
 /**
  * 验证颜色格式
  */
-export function validateColorFormat(value: string, format: ColorFormat): boolean {
+export function validateColorFormat(
+  value: string,
+  format: ColorFormat
+): boolean {
   switch (format) {
     case 'hex':
       return isValidHex(value);

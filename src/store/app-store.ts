@@ -1,12 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppSettings, UserPreferences, ThemeMode, Language, ViewMode } from '@/types';
+import type {
+  AppSettings,
+  UserPreferences,
+  ThemeMode,
+  Language,
+  ViewMode,
+} from '@/types';
 
 interface AppState {
   // 应用设置
   settings: AppSettings;
   preferences: UserPreferences;
-  
+
   // UI状态
   sidebarOpen: boolean;
   isLoading: boolean;
@@ -17,20 +23,20 @@ interface AppActions {
   // 设置操作
   updateSettings: (settings: Partial<AppSettings>) => void;
   resetSettings: () => void;
-  
+
   // 偏好操作
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
   addRecentSearch: (search: string) => void;
   clearRecentSearches: () => void;
   addFavoriteColor: (colorId: string) => void;
   removeFavoriteColor: (colorId: string) => void;
-  
+
   // UI状态操作
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  
+
   // 主题操作
   setTheme: (theme: ThemeMode) => void;
   setLanguage: (language: Language) => void;
@@ -59,7 +65,7 @@ const defaultPreferences: UserPreferences = {
     'copy-hex': 'Ctrl+C',
     'copy-rgb': 'Ctrl+Shift+C',
     'toggle-favorite': 'F',
-    'search': 'Ctrl+K',
+    search: 'Ctrl+K',
   },
 };
 
@@ -93,13 +99,13 @@ export const useAppStore = create<AppStore>()(
 
       addRecentSearch: (search) => {
         if (!search.trim()) return;
-        
+
         set((state) => {
           const recentSearches = [
             search,
             ...state.preferences.recentSearches.filter((s) => s !== search),
           ].slice(0, 10); // 保留最近10个搜索
-          
+
           return {
             preferences: {
               ...state.preferences,
@@ -123,11 +129,14 @@ export const useAppStore = create<AppStore>()(
           if (state.preferences.favoriteColorIds.includes(colorId)) {
             return state; // 已经存在，不重复添加
           }
-          
+
           return {
             preferences: {
               ...state.preferences,
-              favoriteColorIds: [...state.preferences.favoriteColorIds, colorId],
+              favoriteColorIds: [
+                ...state.preferences.favoriteColorIds,
+                colorId,
+              ],
             },
           };
         });
@@ -168,7 +177,7 @@ export const useAppStore = create<AppStore>()(
         set((state) => ({
           settings: { ...state.settings, theme },
         }));
-        
+
         // 应用主题到DOM
         applyTheme(theme);
       },
@@ -199,10 +208,11 @@ export const useAppStore = create<AppStore>()(
 // 应用主题到DOM的辅助函数
 function applyTheme(theme: ThemeMode) {
   const root = document.documentElement;
-  
+
   if (theme === 'system') {
     // 使用系统主题
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+      .matches
       ? 'dark'
       : 'light';
     root.classList.toggle('dark', systemTheme === 'dark');
@@ -213,10 +223,12 @@ function applyTheme(theme: ThemeMode) {
 
 // 监听系统主题变化
 if (typeof window !== 'undefined') {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    const { settings } = useAppStore.getState();
-    if (settings.theme === 'system') {
-      applyTheme('system');
-    }
-  });
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
+      const { settings } = useAppStore.getState();
+      if (settings.theme === 'system') {
+        applyTheme('system');
+      }
+    });
 }

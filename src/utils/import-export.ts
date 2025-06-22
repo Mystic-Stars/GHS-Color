@@ -35,7 +35,7 @@ export function importColorsFromJSON(jsonString: string): {
 } {
   try {
     const data = JSON.parse(jsonString) as ColorExportData;
-    
+
     // 验证数据格式
     if (!data.colors || !Array.isArray(data.colors)) {
       return {
@@ -69,15 +69,17 @@ export function importColorsFromJSON(jsonString: string): {
     });
 
     // 处理分类数据
-    const processedCategories: ColorCategory[] = (data.categories || []).map((category) => ({
-      id: category.id || generateId(),
-      name: category.name || 'Unnamed Category',
-      nameZh: category.nameZh || '未命名分类',
-      description: category.description,
-      icon: category.icon,
-      color: category.color,
-      order: category.order || 0,
-    }));
+    const processedCategories: ColorCategory[] = (data.categories || []).map(
+      (category) => ({
+        id: category.id || generateId(),
+        name: category.name || 'Unnamed Category',
+        nameZh: category.nameZh || '未命名分类',
+        description: category.description,
+        icon: category.icon,
+        color: category.color,
+        order: category.order || 0,
+      })
+    );
 
     return {
       colors: processedColors,
@@ -98,15 +100,17 @@ export function importColorsFromJSON(jsonString: string): {
  * 导出颜色为CSS变量
  */
 export function exportColorsToCSS(colors: ExtendedColor[]): string {
-  const cssVariables = colors.map((color) => {
-    const variableName = color.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-    
-    return `  --color-${variableName}: ${color.hex}; /* ${color.nameZh} */`;
-  }).join('\n');
+  const cssVariables = colors
+    .map((color) => {
+      const variableName = color.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      return `  --color-${variableName}: ${color.hex}; /* ${color.nameZh} */`;
+    })
+    .join('\n');
 
   return `:root {\n${cssVariables}\n}`;
 }
@@ -115,15 +119,17 @@ export function exportColorsToCSS(colors: ExtendedColor[]): string {
  * 导出颜色为SCSS变量
  */
 export function exportColorsToSCSS(colors: ExtendedColor[]): string {
-  const scssVariables = colors.map((color) => {
-    const variableName = color.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-    
-    return `$color-${variableName}: ${color.hex}; // ${color.nameZh}`;
-  }).join('\n');
+  const scssVariables = colors
+    .map((color) => {
+      const variableName = color.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      return `$color-${variableName}: ${color.hex}; // ${color.nameZh}`;
+    })
+    .join('\n');
 
   return `// GHS Color Next - 颜色变量\n// 导出时间: ${new Date().toLocaleString()}\n\n${scssVariables}`;
 }
@@ -173,17 +179,21 @@ export function readFileAsText(file: File): Promise<string> {
 /**
  * 下载文件
  */
-export function downloadFile(content: string, filename: string, mimeType: string = 'application/json') {
+export function downloadFile(
+  content: string,
+  filename: string,
+  mimeType: string = 'application/json'
+) {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
-  
+
   const link = document.createElement('a');
   link.href = url;
   link.download = filename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  
+
   URL.revokeObjectURL(url);
 }
 
@@ -205,12 +215,12 @@ export function importColorsFromCSV(csvString: string): {
       };
     }
 
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const headers = lines[0].split(',').map((h) => h.trim().toLowerCase());
     const colors: ExtendedColor[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
-      
+      const values = lines[i].split(',').map((v) => v.trim());
+
       if (values.length < headers.length) continue;
 
       const colorData: any = {};
@@ -226,11 +236,20 @@ export function importColorsFromCSV(csvString: string): {
       const color: ExtendedColor = {
         id: generateId(),
         name: colorData.name || colorData.english_name || 'Unnamed Color',
-        nameZh: colorData.namezh || colorData.chinese_name || colorData.name_zh || '未命名颜色',
+        nameZh:
+          colorData.namezh ||
+          colorData.chinese_name ||
+          colorData.name_zh ||
+          '未命名颜色',
         hex: normalizeHex(colorData.hex),
         description: colorData.description || colorData.desc || '',
-        descriptionZh: colorData.descriptionzh || colorData.description_zh || colorData.desc_zh || '',
-        temperature: colorData.temperature || getColorTemperature(colorData.hex),
+        descriptionZh:
+          colorData.descriptionzh ||
+          colorData.description_zh ||
+          colorData.desc_zh ||
+          '',
+        temperature:
+          colorData.temperature || getColorTemperature(colorData.hex),
         category: colorData.category,
         tags: colorData.tags ? colorData.tags.split(';').filter(Boolean) : [],
         createdAt: new Date().toISOString(),
@@ -274,18 +293,20 @@ export function exportColorsToCSV(colors: ExtendedColor[]): string {
 
   const csvContent = [
     headers.join(','),
-    ...colors.map(color => [
-      color.name,
-      color.nameZh,
-      color.hex,
-      color.description,
-      color.descriptionZh,
-      color.temperature,
-      color.category || '',
-      (color.tags || []).join(';'),
-      color.isFavorite ? 'true' : 'false',
-      color.usageCount || 0,
-    ].join(',')),
+    ...colors.map((color) =>
+      [
+        color.name,
+        color.nameZh,
+        color.hex,
+        color.description,
+        color.descriptionZh,
+        color.temperature,
+        color.category || '',
+        (color.tags || []).join(';'),
+        color.isFavorite ? 'true' : 'false',
+        color.usageCount || 0,
+      ].join(',')
+    ),
   ].join('\n');
 
   return csvContent;
@@ -297,7 +318,7 @@ export function exportColorsToCSV(colors: ExtendedColor[]): string {
 function hexToRgbArray(hex: string): [number, number, number] {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return [0, 0, 0];
-  
+
   return [
     parseInt(result[1], 16) / 255,
     parseInt(result[2], 16) / 255,

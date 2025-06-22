@@ -38,47 +38,59 @@ export function ToastProvider({ children }: ToastProviderProps) {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  const toast = useCallback((data: Omit<ToastData, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const newToast: ToastData = {
-      id,
-      duration: 5000,
-      ...data,
-    };
+  const toast = useCallback(
+    (data: Omit<ToastData, 'id'>) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      const newToast: ToastData = {
+        id,
+        duration: 5000,
+        ...data,
+      };
 
-    setToasts((prev) => [...prev, newToast]);
+      setToasts((prev) => [...prev, newToast]);
 
-    // 自动移除toast
-    if (newToast.duration && newToast.duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, newToast.duration);
-    }
-  }, [removeToast]);
+      // 自动移除toast
+      if (newToast.duration && newToast.duration > 0) {
+        setTimeout(() => {
+          removeToast(id);
+        }, newToast.duration);
+      }
+    },
+    [removeToast]
+  );
 
-  const success = useCallback((message: string, title?: string) => {
-    toast({
-      title: title || '成功',
-      description: message,
-      variant: 'default',
-    });
-  }, [toast]);
+  const success = useCallback(
+    (message: string, title?: string) => {
+      toast({
+        title: title || '成功',
+        description: message,
+        variant: 'default',
+      });
+    },
+    [toast]
+  );
 
-  const error = useCallback((message: string, title?: string) => {
-    toast({
-      title: title || '错误',
-      description: message,
-      variant: 'destructive',
-    });
-  }, [toast]);
+  const error = useCallback(
+    (message: string, title?: string) => {
+      toast({
+        title: title || '错误',
+        description: message,
+        variant: 'destructive',
+      });
+    },
+    [toast]
+  );
 
-  const info = useCallback((message: string, title?: string) => {
-    toast({
-      title: title || '提示',
-      description: message,
-      variant: 'default',
-    });
-  }, [toast]);
+  const info = useCallback(
+    (message: string, title?: string) => {
+      toast({
+        title: title || '提示',
+        description: message,
+        variant: 'default',
+      });
+    },
+    [toast]
+  );
 
   const value: ToastContextType = {
     toast,
