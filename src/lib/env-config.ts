@@ -1,6 +1,18 @@
 import type { ExtendedColor, ColorCategory } from '@/types';
 import { getColorTemperature } from '@/utils/color';
 
+// 动态导入配置文件
+let configColors: any[] = [];
+let configCategories: any[] = [];
+
+try {
+  const config = require('../../config.js');
+  configColors = config.colors || [];
+  configCategories = config.categories || [];
+} catch (error) {
+  console.warn('Failed to load config.js, falling back to environment variables');
+}
+
 /**
  * 应用配置
  */
@@ -43,19 +55,46 @@ export const appConfig = {
 };
 
 /**
- * 从环境变量加载颜色数据
+ * 从配置文件加载颜色数据
+ * 注意：为了保持向后兼容性，函数名保持为loadColorsFromEnv
  */
 export function loadColorsFromEnv(): ExtendedColor[] {
   try {
+    // 首先尝试从配置文件加载
+    if (configColors && configColors.length > 0) {
+      const colors: ExtendedColor[] = configColors.map(
+        (color: any, index: number) => {
+          const hex = color.hex || '#000000';
+          return {
+            id: color.id || `color-${index}`,
+            name: color.name || 'Unnamed Color',
+            nameZh: color.nameZh || '未命名颜色',
+            hex,
+            description: color.description || '',
+            descriptionZh: color.descriptionZh || '',
+            temperature: getColorTemperature(hex), // 自动计算颜色温度
+            category: color.category,
+            tags: color.tags || [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isFavorite: false,
+            usageCount: 0,
+            rgb: color.rgb,
+            hsl: color.hsl,
+          };
+        }
+      );
+      return colors;
+    }
+
+    // 回退到环境变量（向后兼容）
     const colorsJson = process.env.NEXT_PUBLIC_COLORS;
     if (!colorsJson) {
-      console.warn('No colors found in environment variables');
+      console.warn('No colors found in config file or environment variables');
       return [];
     }
 
     const rawColors = JSON.parse(colorsJson);
-
-    // 转换为完整的ExtendedColor格式
     const colors: ExtendedColor[] = rawColors.map(
       (color: any, index: number) => {
         const hex = color.hex || '#000000';
@@ -66,7 +105,7 @@ export function loadColorsFromEnv(): ExtendedColor[] {
           hex,
           description: color.description || '',
           descriptionZh: color.descriptionZh || '',
-          temperature: getColorTemperature(hex), // 自动计算颜色温度
+          temperature: getColorTemperature(hex),
           category: color.category,
           tags: color.tags || [],
           createdAt: new Date().toISOString(),
@@ -81,19 +120,34 @@ export function loadColorsFromEnv(): ExtendedColor[] {
 
     return colors;
   } catch (error) {
-    console.error('Failed to load colors from environment variables:', error);
+    console.error('Failed to load colors from config file or environment variables:', error);
     return [];
   }
 }
 
 /**
- * 从环境变量加载分类数据
+ * 从配置文件加载分类数据
+ * 注意：为了保持向后兼容性，函数名保持为loadCategoriesFromEnv
  */
 export function loadCategoriesFromEnv(): ColorCategory[] {
   try {
+    // 首先尝试从配置文件加载
+    if (configCategories && configCategories.length > 0) {
+      return configCategories.map((category: any) => ({
+        id: category.id || 'default',
+        name: category.name || 'Default Category',
+        nameZh: category.nameZh || '默认分类',
+        description: category.description,
+        icon: category.icon || '📁',
+        color: category.color || '#6B7280',
+        order: category.order || 0,
+      }));
+    }
+
+    // 回退到环境变量（向后兼容）
     const categoriesJson = process.env.NEXT_PUBLIC_CATEGORIES;
     if (!categoriesJson) {
-      console.warn('No categories found in environment variables');
+      console.warn('No categories found in config file or environment variables');
       return getDefaultCategories();
     }
 
@@ -109,7 +163,7 @@ export function loadCategoriesFromEnv(): ColorCategory[] {
     }));
   } catch (error) {
     console.error(
-      'Failed to load categories from environment variables:',
+      'Failed to load categories from config file or environment variables:',
       error
     );
     return getDefaultCategories();

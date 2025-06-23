@@ -4,12 +4,11 @@
   <img src="public/icons/ico.svg" alt="GHS Color Next" width="80" height="80">
   <h1>GHS Color Next</h1>
   <p>现代化色彩管理工具</p>
-  ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-  ![Version](https://img.shields.io/badge/version-2.0.0-green.svg)
-  ![React](https://img.shields.io/badge/React-18+-61DAFB.svg)
-  ![Next.js](https://img.shields.io/badge/Next.js-14+-000000.svg)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6.svg)
-</div>
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
+  <img src="https://img.shields.io/badge/version-2.0.0-green.svg" alt="Version">
+  <img src="https://img.shields.io/badge/React-18+-61DAFB.svg" alt="React">
+  <img src="https://img.shields.io/badge/Next.js-14+-000000.svg" alt="Next.js">
+  <img src="https://img.shields.io/badge/TypeScript-5+-3178C6.svg" alt="TypeScript">
 
 ## 📖 项目简介
 
@@ -46,9 +45,10 @@ GHS Color 是一款现代化的高颜值色彩管理工具，用于保存您和�
    pnpm install
    ```
 
-3. **配置环境变量**
+3. **配置颜色数据**
    ```bash
-   # 编辑 .env.local 文件，配置您的颜色数据
+   # 颜色数据现在存储在根目录的 config.js 文件中
+   # 您可以直接编辑该文件来添加或修改颜色
    ```
    
 4. **启动开发服务器**
@@ -83,8 +83,8 @@ npm run test         # 运行测试
 3. **Fork项目**到您的GitHub账户
 4. **配置环境变量**：
    - 在Vercel部署页面的"Environment Variables"部分
-   - 添加您的`.env.local`文件中的所有环境变量
-   - 特别注意`NEXT_PUBLIC_COLORS`和`NEXT_PUBLIC_CATEGORIES`的JSON格式
+   - 添加您的`.env.local`文件中的应用配置环境变量
+   - 颜色数据现在存储在`config.js`文件中，无需在部署平台配置
 5. **点击Deploy**开始部署
 6. **等待部署完成**，通常需要1-3分钟
 
@@ -102,7 +102,8 @@ npm run test         # 运行测试
 
 ### 部署注意事项
 
-- **环境变量**：确保在部署平台配置所有必要的环境变量
+- **环境变量**：确保在部署平台配置应用基本信息的环境变量（如应用名称、GitHub URL等）
+- **颜色数据**：颜色和分类数据存储在`config.js`文件中，通过Git提交即可更新
 - **构建命令**：`npm run build`
 - **启动命令**：`npm run start`
 
@@ -126,7 +127,9 @@ npm run test         # 运行测试
 
 ## ⚙️ 配置说明
 
-项目使用 `.env.local` 文件进行配置，主要包含以下配置项：
+### 应用配置
+
+项目使用 `.env.local` 文件进行应用基本信息配置：
 
 ```bash
 # 应用基本信息
@@ -146,12 +149,24 @@ NEXT_PUBLIC_SITE_DESCRIPTION_EN=A modern color management tool
 
 # 关键字
 NEXT_PUBLIC_SITE_KEYWORDS=GHS Color,color management,color tool,design tool,color picker,palette,颜色管理,色彩工具
+```
 
-# 颜色数据（JSON格式）
-NEXT_PUBLIC_COLORS='[{"id":"box-yellow","name":"Box Yellow",...}]'
+### 颜色数据配置
 
-# 分类数据（JSON格式）
-NEXT_PUBLIC_CATEGORIES='[{"id":"brand","name":"Brand Colors",...}]'
+颜色和分类数据存储在根目录的 `config.js` 文件中，无需在环境变量中配置。
+
+#### config.js 文件结构
+
+```javascript
+// config.js
+module.exports = {
+  colors: [
+    // 颜色数组
+  ],
+  categories: [
+    // 分类数组
+  ]
+};
 ```
 
 ### 颜色数据格式
@@ -183,39 +198,39 @@ interface Category {
 }
 ```
 
-### 颜色数据示例
+#### 颜色数据示例
 
-```json
+```javascript
 {
-  "id": "box-yellow",
-  "name": "Box Yellow",
-  "nameZh": "盒子黄",
-  "hex": "#f6dc50",
-  "description": "The exclusive yellow color of BoxWorld, the logo color of GHS.",
-  "descriptionZh": "盒王的专属黄色，GHS的标志颜色。",
-  "category": "brand",
-  "tags": ["yellow", "logo", "ghs"]
+  id: "box-yellow",
+  name: "Box Yellow",
+  nameZh: "盒子黄",
+  hex: "#f6dc50",
+  description: "The exclusive yellow color of BoxWorld, the logo color of GHS.",
+  descriptionZh: "盒王的专属黄色，GHS的标志颜色。",
+  category: "brand",
+  tags: ["yellow", "logo", "ghs"]
 }
 ```
 
 ### 如何添加新颜色
 
-1. **编辑 `.env.local` 文件**
-2. **在 `NEXT_PUBLIC_COLORS` 数组中添加新的颜色对象**
-3. **确保JSON格式正确**（注意逗号和引号）
-4. **重启开发服务器**以加载新配置
+1. **编辑根目录的 `config.js` 文件**
+2. **在 `colors` 数组中添加新的颜色对象**
+3. **确保JavaScript对象格式正确**
+4. **提交到Git并推送**，部署平台会自动更新
 
-```json
-// 在 NEXT_PUBLIC_COLORS 数组中添加
+```javascript
+// 在 config.js 的 colors 数组中添加
 {
-  "id": "your-color-id",           // 唯一ID，使用小写和连字符
-  "name": "Your Color Name",       // 英文名称
-  "nameZh": "您的颜色名称",         // 中文名称
-  "hex": "#ff6b6b",               // HEX颜色值
-  "description": "English description",
-  "descriptionZh": "中文描述",
-  "category": "brand",            // 分类：brand/ui/team
-  "tags": ["red", "vibrant"]     // 标签数组
+  id: "your-color-id",           // 唯一ID，使用小写和连字符
+  name: "Your Color Name",       // 英文名称
+  nameZh: "您的颜色名称",         // 中文名称
+  hex: "#ff6b6b",               // HEX颜色值
+  description: "English description",
+  descriptionZh: "中文描述",
+  category: "brand",            // 分类：brand/ui/team
+  tags: ["red", "vibrant"]     // 标签数组
 }
 ```
 
@@ -223,17 +238,25 @@ interface Category {
 
 - **颜色ID必须唯一**，建议使用描述性的名称
 - **HEX值必须以#开头**，使用6位十六进制格式
-- **分类必须在CATEGORIES中存在**
-- **JSON格式必须正确**，注意逗号和引号的使用
+- **分类必须在categories数组中存在**
+- **JavaScript对象格式必须正确**，注意逗号的使用
 
 ## 🤝 贡献指南
 
 ### 贡献新颜色
 
+#### 方式一：通过应用提交（推荐）
 1. 点击应用中的"提交颜色"按钮
 2. 按照指南在GitHub上创建Issue
 3. 提供颜色的详细信息和用途说明
 4. 等待维护者审核和合并
+
+#### 方式二：直接提交PR
+1. Fork本项目到您的GitHub账户
+2. 编辑根目录的 `config.js` 文件
+3. 在 `colors` 数组中添加新颜色
+4. 提交PR并描述颜色的用途和来源
+5. 等待审核和合并
 
 ### 代码贡献
 
