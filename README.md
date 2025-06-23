@@ -1,5 +1,3 @@
-# GHS Color Next
-
 <div align="center">
   <img src="public/icons/ico.svg" alt="GHS Color Next" width="80" height="80">
   <h1>GHS Color Next</h1>
