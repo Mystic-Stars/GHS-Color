@@ -13,6 +13,7 @@ export interface SelectOption {
 interface SelectProps {
   value?: string;
   onValueChange?: (value: string) => void;
+  onBlur?: () => void;
   options: SelectOption[];
   placeholder?: string;
   disabled?: boolean;
@@ -22,6 +23,7 @@ interface SelectProps {
 export function Select({
   value,
   onValueChange,
+  onBlur,
   options,
   placeholder = 'Select an option',
   disabled = false,
@@ -93,6 +95,7 @@ export function Select({
         !selectRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        onBlur?.();
       }
     };
 
@@ -101,7 +104,7 @@ export function Select({
       return () =>
         document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [isOpen]);
+  }, [isOpen, onBlur]);
 
   // 更新选中的选项
   React.useEffect(() => {

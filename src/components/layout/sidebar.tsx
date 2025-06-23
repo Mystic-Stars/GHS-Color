@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Palette, Heart, Folder, Wrench } from 'lucide-react';
+import { X, Palette, Heart, Folder, Wrench, Settings } from 'lucide-react';
 import { Button, Badge } from '@/components/ui';
 import { useAppStore, useColorStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
-import { ColorDetailModal, ColorConverterModal } from '@/components/color';
+import { ColorDetailModal, ColorConverterModal, ColorConfigGeneratorModal } from '@/components/color';
 import type { ExtendedColor } from '@/types';
 
 interface SidebarProps {
@@ -23,6 +23,7 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
   );
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showConverterModal, setShowConverterModal] = useState(false);
+  const [showConfigGeneratorModal, setShowConfigGeneratorModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // 监听屏幕尺寸变化
@@ -94,6 +95,14 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
 
   const handleCloseConverter = () => {
     setShowConverterModal(false);
+  };
+
+  const handleOpenConfigGenerator = () => {
+    setShowConfigGeneratorModal(true);
+  };
+
+  const handleCloseConfigGenerator = () => {
+    setShowConfigGeneratorModal(false);
   };
 
   if (!sidebarOpen) return null;
@@ -241,6 +250,13 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                   <Palette className="h-4 w-4" />
                   <span>{t('tools.colorConverter.title')}</span>
                 </button>
+                <button
+                  onClick={handleOpenConfigGenerator}
+                  className="w-full flex items-center gap-3 p-2 text-sm rounded-md hover:bg-accent transition-colors"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>{t('tools.colorConfigGenerator.title')}</span>
+                </button>
               </div>
             </div>
 
@@ -282,6 +298,12 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
       <ColorConverterModal
         open={showConverterModal}
         onOpenChange={handleCloseConverter}
+      />
+
+      {/* 颜色配置生成器Modal */}
+      <ColorConfigGeneratorModal
+        open={showConfigGeneratorModal}
+        onOpenChange={handleCloseConfigGenerator}
       />
     </>
   );
