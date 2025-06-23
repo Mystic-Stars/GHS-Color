@@ -90,8 +90,24 @@ export function Header({
               />
             </div>
             <div>
-              <h1 className="text-xl font-bold">GHS Color Next</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">
+              {/* 桌面端显示完整标题 */}
+              <div className="hidden sm:flex items-center gap-2">
+                <h1 className="text-xl font-bold text-foreground">
+                  {appConfig.mainTitle}
+                </h1>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-orange-400 text-white text-sm font-medium shadow-sm">
+                  {appConfig.suffix}
+                </span>
+              </div>
+
+              {/* 移动端只显示简化标题（可选，或者完全隐藏） */}
+              <div className="sm:hidden">
+                <h1 className="text-lg font-bold text-foreground sr-only">
+                  {appConfig.mainTitle} {appConfig.suffix}
+                </h1>
+              </div>
+
+              <p className="text-xs text-muted-foreground hidden sm:block mt-1">
                 {settings.language === 'zh-CN'
                   ? appConfig.description
                   : appConfig.descriptionEn}

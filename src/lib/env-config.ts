@@ -6,6 +6,8 @@ import { getColorTemperature } from '@/utils/color';
  */
 export const appConfig = {
   name: process.env.NEXT_PUBLIC_APP_NAME || 'GHS Color Next',
+  mainTitle: process.env.NEXT_PUBLIC_APP_MAIN_TITLE || 'GHS Color',
+  suffix: process.env.NEXT_PUBLIC_APP_SUFFIX || 'Next',
   version: process.env.NEXT_PUBLIC_APP_VERSION || '2.0.0',
   description: process.env.NEXT_PUBLIC_APP_DESCRIPTION || '现代化色彩管理工具',
   descriptionEn:
