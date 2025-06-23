@@ -7,6 +7,7 @@ import type {
   ColorStats,
 } from '@/types';
 import { generateId } from '@/utils';
+import { useAppStore } from './app-store';
 
 interface ColorState {
   // 数据状态
@@ -40,6 +41,7 @@ interface ColorActions {
   // 只读操作
   toggleFavorite: (id: string) => void;
   incrementUsage: (id: string) => void;
+  syncFavorites: () => void;
 
   // 选择操作
   selectColor: (id: string | null) => void;
@@ -123,8 +125,18 @@ export const useColorStore = create<ColorStore>()((set, get) => ({
 
   // 数据初始化
   initializeData: (colors, categories) => {
+    // 从 app-store 获取收藏的颜色ID列表
+    const appStore = useAppStore.getState();
+    const favoriteColorIds = appStore.preferences.favoriteColorIds;
+
+    // 恢复收藏状态
+    const colorsWithFavorites = colors.map((color) => ({
+      ...color,
+      isFavorite: favoriteColorIds.includes(color.id),
+    }));
+
     set({
-      colors,
+      colors: colorsWithFavorites,
       categories,
     });
     get().updateStats();
@@ -175,17 +187,32 @@ export const useColorStore = create<ColorStore>()((set, get) => ({
   },
 
   toggleFavorite: (id) => {
+    const state = get();
+    const color = state.colors.find((c) => c.id === id);
+    if (!color) return;
+
+    const newIsFavorite = !color.isFavorite;
+
+    // 更新颜色状态
     set((state) => ({
       colors: state.colors.map((color) =>
         color.id === id
           ? {
               ...color,
-              isFavorite: !color.isFavorite,
+              isFavorite: newIsFavorite,
               updatedAt: new Date().toISOString(),
             }
           : color
       ),
     }));
+
+    // 同步到 app-store 的 favoriteColorIds
+    const appStore = useAppStore.getState();
+    if (newIsFavorite) {
+      appStore.addFavoriteColor(id);
+    } else {
+      appStore.removeFavoriteColor(id);
+    }
 
     get().updateStats();
   },
@@ -201,6 +228,21 @@ export const useColorStore = create<ColorStore>()((set, get) => ({
             }
           : color
       ),
+    }));
+
+    get().updateStats();
+  },
+
+  // 同步收藏状态
+  syncFavorites: () => {
+    const appStore = useAppStore.getState();
+    const favoriteColorIds = appStore.preferences.favoriteColorIds;
+
+    set((state) => ({
+      colors: state.colors.map((color) => ({
+        ...color,
+        isFavorite: favoriteColorIds.includes(color.id),
+      })),
     }));
 
     get().updateStats();
