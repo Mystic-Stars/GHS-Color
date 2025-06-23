@@ -9,6 +9,7 @@
   <img src="https://img.shields.io/badge/React-18+-61DAFB.svg" alt="React">
   <img src="https://img.shields.io/badge/Next.js-14+-000000.svg" alt="Next.js">
   <img src="https://img.shields.io/badge/TypeScript-5+-3178C6.svg" alt="TypeScript">
+</div>
 
 ## 📖 项目简介
 
