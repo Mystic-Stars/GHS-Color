@@ -130,6 +130,12 @@ export const enUS = {
     warm: 'Warm',
     cool: 'Cool',
     neutral: 'Neutral',
+    copyName: 'Copy Name',
+    addToFavorites: 'Add to Favorites',
+    removeFromFavorites: 'Remove from Favorites',
+    addedToFavorites: 'Added to favorites',
+    removedFromFavorites: 'Removed from favorites',
+    viewDetails: 'View Details',
   },
 
   // Submit Guide

@@ -5,3 +5,5 @@ export { ColorDetail } from './color-detail';
 export { ColorDetailModal } from './color-detail-modal';
 export { ColorConverterModal } from './color-converter-modal';
 export { ColorConfigGeneratorModal } from './color-config-generator-modal';
+export { ColorContextMenu } from './color-context-menu';
+export { SimpleColorContextMenu } from './simple-color-context-menu';

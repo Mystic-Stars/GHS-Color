@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Heart, Copy, MoreHorizontal } from 'lucide-react';
+import { Heart, Copy } from 'lucide-react';
 import { Card, CardContent, Button, Badge } from '@/components/ui';
+import { ColorContextMenu } from './color-context-menu';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
@@ -39,7 +40,7 @@ export function ColorCard({
 
     if (copySuccess) {
       incrementUsage(color.id);
-      success(`${t('color.copySuccess')}: ${formattedColor}`);
+      success(formattedColor, t('color.copySuccess'));
     }
   };
 
@@ -54,11 +55,15 @@ export function ColorCard({
   };
 
   return (
-    <Card
-      className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105"
-      onClick={handleCardClick}
+    <ColorContextMenu
+      color={color}
+      onViewDetails={handleCardClick}
     >
-      <CardContent className="p-0">
+      <Card
+        className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105"
+        onClick={handleCardClick}
+      >
+        <CardContent className="p-0">
         {/* 颜色预览区域 */}
         <div
           className="h-32 w-full rounded-t-lg relative overflow-hidden"
@@ -173,5 +178,6 @@ export function ColorCard({
         )}
       </CardContent>
     </Card>
+    </ColorContextMenu>
   );
 }

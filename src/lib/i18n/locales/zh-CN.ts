@@ -130,6 +130,12 @@ export const zhCN = {
     warm: '暖色',
     cool: '冷色',
     neutral: '中性色',
+    copyName: '复制名称',
+    addToFavorites: '添加到收藏夹',
+    removeFromFavorites: '从收藏夹移除',
+    addedToFavorites: '已添加到收藏夹',
+    removedFromFavorites: '已从收藏夹移除',
+    viewDetails: '查看详情',
   },
 
   // 提交指南

@@ -14,14 +14,17 @@ interface ToastData {
   id: string;
   title?: string;
   description?: string;
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
   duration?: number;
+  showIcon?: boolean;
+  showProgress?: boolean;
 }
 
 interface ToastContextType {
   toast: (data: Omit<ToastData, 'id'>) => void;
   success: (message: string, title?: string) => void;
   error: (message: string, title?: string) => void;
+  warning: (message: string, title?: string) => void;
   info: (message: string, title?: string) => void;
 }
 
@@ -51,9 +54,12 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
       // 自动移除toast
       if (newToast.duration && newToast.duration > 0) {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           removeToast(id);
         }, newToast.duration);
+
+        // 存储定时器ID以便后续可能的清理
+        (newToast as any).timerId = timer;
       }
     },
     [removeToast]
@@ -64,7 +70,10 @@ export function ToastProvider({ children }: ToastProviderProps) {
       toast({
         title: title || '成功',
         description: message,
-        variant: 'default',
+        variant: 'success',
+        duration: 4000,
+        showIcon: true,
+        showProgress: true,
       });
     },
     [toast]
@@ -76,6 +85,21 @@ export function ToastProvider({ children }: ToastProviderProps) {
         title: title || '错误',
         description: message,
         variant: 'destructive',
+        duration: 6000,
+        showIcon: true,
+      });
+    },
+    [toast]
+  );
+
+  const warning = useCallback(
+    (message: string, title?: string) => {
+      toast({
+        title: title || '警告',
+        description: message,
+        variant: 'warning',
+        duration: 5000,
+        showIcon: true,
       });
     },
     [toast]
@@ -86,7 +110,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
       toast({
         title: title || '提示',
         description: message,
-        variant: 'default',
+        variant: 'info',
+        duration: 4000,
+        showIcon: true,
       });
     },
     [toast]
@@ -96,6 +122,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     toast,
     success,
     error,
+    warning,
     info,
   };
 
@@ -107,6 +134,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
           <Toast
             key={toastData.id}
             variant={toastData.variant}
+            showIcon={toastData.showIcon}
+            showProgress={toastData.showProgress}
+            duration={toastData.duration}
             onOpenChange={(open) => {
               if (!open) {
                 removeToast(toastData.id);

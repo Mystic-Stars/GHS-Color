@@ -34,3 +34,4 @@ export {
 } from './toast';
 export { Select, type SelectOption } from './select';
 export { FlagIcon } from './flag-icon';
+export { ContextMenu, type ContextMenuItem, type ContextMenuProps } from './context-menu';

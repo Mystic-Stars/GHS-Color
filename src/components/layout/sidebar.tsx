@@ -5,7 +5,7 @@ import { X, Palette, Heart, Folder, Wrench, Settings } from 'lucide-react';
 import { Button, Badge } from '@/components/ui';
 import { useAppStore, useColorStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
-import { ColorDetailModal, ColorConverterModal, ColorConfigGeneratorModal } from '@/components/color';
+import { ColorDetailModal, ColorConverterModal, ColorConfigGeneratorModal, ColorContextMenu } from '@/components/color';
 import type { ExtendedColor } from '@/types';
 
 interface SidebarProps {
@@ -268,13 +268,18 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                 </h3>
                 <div className="grid grid-cols-4 gap-2">
                   {stats.recentColors.slice(0, 8).map((color) => (
-                    <div
+                    <ColorContextMenu
                       key={color.id}
-                      className="aspect-square rounded-md cursor-pointer hover:scale-105 transition-transform border"
-                      style={{ backgroundColor: color.hex }}
-                      title={`${color.nameZh} (${color.hex})`}
-                      onClick={() => handleRecentColorClick(color)}
-                    />
+                      color={color}
+                      onViewDetails={() => handleRecentColorClick(color)}
+                    >
+                      <div
+                        className="aspect-square rounded-md cursor-pointer hover:scale-105 transition-transform border"
+                        style={{ backgroundColor: color.hex }}
+                        title={`${color.nameZh} (${color.hex})`}
+                        onClick={() => handleRecentColorClick(color)}
+                      />
+                    </ColorContextMenu>
                   ))}
                 </div>
               </div>

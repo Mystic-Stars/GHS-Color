@@ -10,6 +10,7 @@ import {
   Button,
   Badge,
 } from '@/components/ui';
+import { SimpleColorContextMenu } from './simple-color-context-menu';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
@@ -269,22 +270,26 @@ export function ColorDetailModal({
               {showSimilarColors && (
                 <div className="grid grid-cols-4 gap-2">
                   {similarColors.map((similarColor, index) => (
-                    <div
+                    <SimpleColorContextMenu
                       key={index}
-                      className="aspect-square rounded-lg cursor-pointer hover:scale-105 transition-transform border relative group"
-                      style={{ backgroundColor: similarColor }}
-                      title={`${t('color.clickToCopy')} ${similarColor}`}
-                      onClick={async () => {
-                        const copySuccess = await copyToClipboard(similarColor);
-                        if (copySuccess) {
-                          success(`已复制 ${similarColor} 到剪贴板`);
-                        }
-                      }}
+                      hex={similarColor}
                     >
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                        <Copy className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div
+                        className="aspect-square rounded-lg cursor-pointer hover:scale-105 transition-transform border relative group"
+                        style={{ backgroundColor: similarColor }}
+                        title={`${t('color.clickToCopy')} ${similarColor}`}
+                        onClick={async () => {
+                          const copySuccess = await copyToClipboard(similarColor);
+                          if (copySuccess) {
+                            success(`已复制 ${similarColor} 到剪贴板`);
+                          }
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
+                          <Copy className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
                       </div>
-                    </div>
+                    </SimpleColorContextMenu>
                   ))}
                 </div>
               )}
