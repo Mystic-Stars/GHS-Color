@@ -38,6 +38,12 @@ deploy: pull ## 一键部署应用
 	@docker stop $(CONTAINER_NAME) 2>/dev/null || true
 	@docker rm $(CONTAINER_NAME) 2>/dev/null || true
 	@echo "$(BLUE)启动新容器...$(NC)"
+	@if [ ! -z "$$NEXT_PUBLIC_COLORS" ]; then \
+		echo "$(YELLOW)使用自定义颜色配置$(NC)"; \
+	fi
+	@if [ ! -z "$$NEXT_PUBLIC_CATEGORIES" ]; then \
+		echo "$(YELLOW)使用自定义分类配置$(NC)"; \
+	fi
 	docker run -d \
 		--name $(CONTAINER_NAME) \
 		-p 3000:3000 \
@@ -46,6 +52,8 @@ deploy: pull ## 一键部署应用
 		-e NEXT_PUBLIC_APP_NAME="GHS Color Next" \
 		-e NEXT_PUBLIC_APP_VERSION="2.0.0" \
 		-e NEXT_PUBLIC_GITHUB_URL="https://github.com/Mystic-Stars/GHS-Color" \
+		$$(if [ ! -z "$$NEXT_PUBLIC_COLORS" ]; then echo "-e NEXT_PUBLIC_COLORS=$$NEXT_PUBLIC_COLORS"; fi) \
+		$$(if [ ! -z "$$NEXT_PUBLIC_CATEGORIES" ]; then echo "-e NEXT_PUBLIC_CATEGORIES=$$NEXT_PUBLIC_CATEGORIES"; fi) \
 		$(IMAGE_NAME)
 	@echo "$(GREEN)✅ 部署成功！$(NC)"
 	@echo "$(GREEN)🌐 访问地址: http://localhost:3000$(NC)"

@@ -18,6 +18,8 @@ GHS Color 是一款现代化的高颜值色彩管理工具，用于保存您和�
 - [✨ 主要特色](#-主要特色)
 - [🚀 快速开始](#-快速开始)
 - [🚀 部署指南](#-部署指南)
+  - [🐳 Docker 一键部署](#-docker-一键部署推荐)
+  - [☁️ Vercel 一键部署](#️-vercel-一键部署)
 - [⚙️ 配置说明](#️-配置说明)
   - [如何添加新颜色](#如何添加新颜色)
 - [🤝 贡献指南](#-贡献指南)
@@ -82,7 +84,100 @@ npm run test         # 运行测试
 
 ## 🚀 部署指南
 
-### Vercel 一键部署
+### 🐳 Docker 一键部署
+
+Docker部署是简单可靠的部署方式，支持一键部署到任何支持Docker的环境。
+
+下文为简略教程，详细教程请参见[Docker 部署指南](./docs/docker-guide.md)
+
+#### ⚡ 超级快速部署（推荐）
+
+**无需下载源码，直接运行一条命令：**
+
+```bash
+# 方式一：使用一键部署脚本（最简单）
+curl -fsSL https://raw.githubusercontent.com/Mystic-Stars/GHS-Color/main/scripts/one-click-deploy.sh | bash
+
+# 方式二：直接运行Docker容器（环境变量难以配置）
+docker run -d -p 3000:3000 --name ghs-color mysticstars/ghs-color:latest
+
+# 方式三：使用Docker Compose（适用于生产环境）
+curl -fsSL https://raw.githubusercontent.com/Mystic-Stars/GHS-Color/main/docker-compose.yml -o docker-compose.yml && docker-compose up -d
+```
+
+**Windows用户：**
+```cmd
+REM 下载并运行一键部署脚本
+curl -fsSL https://raw.githubusercontent.com/Mystic-Stars/GHS-Color/main/scripts/one-click-deploy.bat -o deploy.bat && deploy.bat
+
+REM 或直接运行Docker容器
+docker run -d -p 3000:3000 --name ghs-color mysticstars/ghs-color:latest
+```
+
+部署完成后，访问 [http://localhost:3000](http://localhost:3000) 即可使用应用。
+
+#### 🎨 自定义颜色配置
+
+Docker部署支持通过环境变量自定义颜色数据，优先级：**环境变量 > config.js文件**
+
+```bash
+# 自定义颜色数据
+export NEXT_PUBLIC_COLORS='[{"id":"my-red","name":"My Red","nameZh":"我的红色","hex":"#ff0000","description":"Custom red","descriptionZh":"自定义红色","category":"brand","tags":["red"]}]'
+
+# 自定义分类数据
+export NEXT_PUBLIC_CATEGORIES='[{"id":"brand","name":"Brand","nameZh":"品牌","description":"Brand colors","icon":"🎨","color":"#6366F1","order":1}]'
+
+# 然后运行部署命令
+curl -fsSL https://raw.githubusercontent.com/Mystic-Stars/GHS-Color/main/scripts/one-click-deploy.sh | bash
+```
+
+详细配置说明请参考：[颜色配置指南](./docs/color-config-guide.md)
+
+#### 🛠️ 开发者本地构建
+
+如果您是开发者需要自定义构建，可以克隆项目进行本地构建：
+
+```bash
+# 克隆项目
+git clone https://github.com/Mystic-Stars/GHS-Color.git
+cd GHS-Color
+
+# 本地构建镜像
+docker build -t ghs-color-local .
+
+# 运行本地构建的镜像
+docker run -d -p 3000:3000 --name ghs-color-local ghs-color-local
+```
+
+
+
+#### 常用命令
+
+```bash
+# 一键部署
+make deploy        # 拉取最新镜像并部署
+
+# 查看服务状态
+make status
+
+# 查看日志
+make logs
+
+# 停止服务
+make stop
+
+# 重启服务
+make restart
+
+# 清理资源
+make clean
+
+# 使用Docker Compose
+make compose       # 使用Docker Compose部署
+make compose-stop  # 停止Docker Compose服务
+```
+
+### ☁️ Vercel 一键部署
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FMystic-Stars%2FGHS-Color)
 
@@ -96,22 +191,19 @@ npm run test         # 运行测试
 5. **点击Deploy**开始部署
 6. **等待部署完成**，通常需要1-3分钟
 
-### 其他部署平台
+### 🌐 其他部署平台
 
 项目也支持部署到其他平台：
 
 - **Netlify**
-
 - **Railway**
+- **Cloudflare Pages**
+- **自建服务器**（推荐使用Docker）
 
-- **Cloudflare pages**
-
-  ……
-
-### 部署注意事项
+### 📋 部署注意事项
 
 - **环境变量**：确保在部署平台配置应用基本信息的环境变量（如应用名称、GitHub URL等）
-- **颜色数据**：颜色和分类数据存储在`config.js`文件中，通过Git提交即可更新
+- **颜色数据**：颜色和分类数据存储在`config.js`文件中，通过Git提交即可更新（Docker部署方式除外）
 - **构建命令**：`npm run build`
 - **启动命令**：`npm run start`
 
@@ -142,6 +234,8 @@ NEXT_PUBLIC_SITE_KEYWORDS=GHS Color,color management,color tool,design tool,colo
 ```
 
 ### 颜色数据配置
+
+***该说明并不适用于Docker部署方式用户，Docker颜色数据配置方式请见[颜色配置指南](docs/color-config-guide.md)***
 
 颜色和分类数据存储在根目录的 `config.js` 文件中，无需在环境变量中配置。
 

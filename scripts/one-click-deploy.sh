@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GHS Color Next - 一键部署脚本
-# Docker Hub拉取预构建镜像，一键部署
+# 直接从Docker Hub拉取预构建镜像，实现真正的一键部署
 
 set -e
 
@@ -124,17 +124,32 @@ get_port() {
 # 启动容器
 start_container() {
     print_info "正在启动容器..."
-    
-    docker run -d \
+
+    # 基本环境变量
+    ENV_VARS="-e NODE_ENV=production"
+    ENV_VARS="$ENV_VARS -e NEXT_PUBLIC_APP_NAME=\"GHS Color Next\""
+    ENV_VARS="$ENV_VARS -e NEXT_PUBLIC_APP_VERSION=\"2.0.0\""
+    ENV_VARS="$ENV_VARS -e NEXT_PUBLIC_GITHUB_URL=\"https://github.com/Mystic-Stars/GHS-Color\""
+
+    # 如果设置了颜色配置环境变量，则传递给容器
+    if [ ! -z "$NEXT_PUBLIC_COLORS" ]; then
+        ENV_VARS="$ENV_VARS -e NEXT_PUBLIC_COLORS=\"$NEXT_PUBLIC_COLORS\""
+        print_info "使用自定义颜色配置"
+    fi
+
+    if [ ! -z "$NEXT_PUBLIC_CATEGORIES" ]; then
+        ENV_VARS="$ENV_VARS -e NEXT_PUBLIC_CATEGORIES=\"$NEXT_PUBLIC_CATEGORIES\""
+        print_info "使用自定义分类配置"
+    fi
+
+    # 启动容器
+    eval "docker run -d \
         --name ${CONTAINER_NAME} \
         -p ${PORT}:3000 \
         --restart unless-stopped \
-        -e NODE_ENV=production \
-        -e NEXT_PUBLIC_APP_NAME="GHS Color Next" \
-        -e NEXT_PUBLIC_APP_VERSION="2.0.0" \
-        -e NEXT_PUBLIC_GITHUB_URL="https://github.com/Mystic-Stars/GHS-Color" \
-        ${IMAGE_NAME}:latest
-    
+        $ENV_VARS \
+        ${IMAGE_NAME}:latest"
+
     if [ $? -eq 0 ]; then
         print_success "容器启动成功"
     else

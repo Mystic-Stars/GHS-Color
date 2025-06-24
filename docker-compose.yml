@@ -1,5 +1,5 @@
-# GHS Color Next - 简化版 Docker Compose
-# 用于一键部署，直接使用预构建镜像
+# GHS Color Next - Docker Compose 配置
+# 基于Docker Hub预构建镜像的一键部署
 
 version: '3.8'
 
@@ -21,6 +21,10 @@ services:
       - NEXT_PUBLIC_SITE_TITLE_EN=GHS Color Next - Modern Color Management Tool
       - NEXT_PUBLIC_SITE_DESCRIPTION_EN=A modern color management tool
       - NEXT_PUBLIC_SITE_KEYWORDS=GHS Color,color management,color tool,design tool,color picker,palette,颜色管理,色彩工具
+      # 颜色数据配置（可选）- 如果设置了这些环境变量，将优先使用环境变量中的数据
+      # 取消注释并修改以下行来自定义颜色数据：
+      # - NEXT_PUBLIC_COLORS=[{"id":"custom-red","name":"Custom Red","nameZh":"自定义红色","hex":"#ff0000","description":"A custom red color","descriptionZh":"自定义的红色","category":"brand","tags":["red","custom"]}]
+      # - NEXT_PUBLIC_CATEGORIES=[{"id":"custom","name":"Custom Colors","nameZh":"自定义颜色","description":"Custom color category","icon":"🎨","color":"#6366F1","order":1}]
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]

@@ -1,6 +1,6 @@
 @echo off
 REM GHS Color Next - 一键部署脚本 (Windows)
-REM Docker Hub拉取预构建镜像，一键部署
+REM 直接从Docker Hub拉取预构建镜像，实现真正的一键部署
 
 setlocal enabledelayedexpansion
 
@@ -92,6 +92,18 @@ if not errorlevel 1 (
 
 REM 启动容器
 echo [INFO] 正在启动容器...
+
+REM 检查是否有自定义颜色配置
+set EXTRA_ENV=
+if defined NEXT_PUBLIC_COLORS (
+    set EXTRA_ENV=%EXTRA_ENV% -e NEXT_PUBLIC_COLORS="%NEXT_PUBLIC_COLORS%"
+    echo [INFO] 使用自定义颜色配置
+)
+if defined NEXT_PUBLIC_CATEGORIES (
+    set EXTRA_ENV=%EXTRA_ENV% -e NEXT_PUBLIC_CATEGORIES="%NEXT_PUBLIC_CATEGORIES%"
+    echo [INFO] 使用自定义分类配置
+)
+
 docker run -d ^
     --name %CONTAINER_NAME% ^
     -p %PORT%:3000 ^
@@ -100,6 +112,7 @@ docker run -d ^
     -e NEXT_PUBLIC_APP_NAME="GHS Color Next" ^
     -e NEXT_PUBLIC_APP_VERSION="2.0.0" ^
     -e NEXT_PUBLIC_GITHUB_URL="https://github.com/Mystic-Stars/GHS-Color" ^
+    %EXTRA_ENV% ^
     %IMAGE_NAME%:latest
 
 if errorlevel 1 (

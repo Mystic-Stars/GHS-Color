@@ -55,13 +55,44 @@ export const appConfig = {
 };
 
 /**
- * 从配置文件加载颜色数据
- * 注意：为了保持向后兼容性，函数名保持为loadColorsFromEnv
+ * 从环境变量或配置文件加载颜色数据
+ * 优先级：环境变量 > config.js文件
  */
 export function loadColorsFromEnv(): ExtendedColor[] {
   try {
-    // 首先尝试从配置文件加载
+    // 首先尝试从环境变量加载（优先级最高）
+    const colorsJson = process.env.NEXT_PUBLIC_COLORS;
+    if (colorsJson) {
+      console.info('Loading colors from environment variables');
+      const rawColors = JSON.parse(colorsJson);
+      const colors: ExtendedColor[] = rawColors.map(
+        (color: any, index: number) => {
+          const hex = color.hex || '#000000';
+          return {
+            id: color.id || `color-${index}`,
+            name: color.name || 'Unnamed Color',
+            nameZh: color.nameZh || '未命名颜色',
+            hex,
+            description: color.description || '',
+            descriptionZh: color.descriptionZh || '',
+            temperature: getColorTemperature(hex),
+            category: color.category,
+            tags: color.tags || [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isFavorite: false,
+            usageCount: 0,
+            rgb: color.rgb,
+            hsl: color.hsl,
+          };
+        }
+      );
+      return colors;
+    }
+
+    // 回退到配置文件
     if (configColors && configColors.length > 0) {
+      console.info('Loading colors from config.js file');
       const colors: ExtendedColor[] = configColors.map(
         (color: any, index: number) => {
           const hex = color.hex || '#000000';
@@ -87,52 +118,39 @@ export function loadColorsFromEnv(): ExtendedColor[] {
       return colors;
     }
 
-    // 回退到环境变量（向后兼容）
-    const colorsJson = process.env.NEXT_PUBLIC_COLORS;
-    if (!colorsJson) {
-      console.warn('No colors found in config file or environment variables');
-      return [];
-    }
-
-    const rawColors = JSON.parse(colorsJson);
-    const colors: ExtendedColor[] = rawColors.map(
-      (color: any, index: number) => {
-        const hex = color.hex || '#000000';
-        return {
-          id: color.id || `color-${index}`,
-          name: color.name || 'Unnamed Color',
-          nameZh: color.nameZh || '未命名颜色',
-          hex,
-          description: color.description || '',
-          descriptionZh: color.descriptionZh || '',
-          temperature: getColorTemperature(hex),
-          category: color.category,
-          tags: color.tags || [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          isFavorite: false,
-          usageCount: 0,
-          rgb: color.rgb,
-          hsl: color.hsl,
-        };
-      }
-    );
-
-    return colors;
+    console.warn('No colors found in environment variables or config file');
+    return [];
   } catch (error) {
-    console.error('Failed to load colors from config file or environment variables:', error);
+    console.error('Failed to load colors from environment variables or config file:', error);
     return [];
   }
 }
 
 /**
- * 从配置文件加载分类数据
- * 注意：为了保持向后兼容性，函数名保持为loadCategoriesFromEnv
+ * 从环境变量或配置文件加载分类数据
+ * 优先级：环境变量 > config.js文件 > 默认分类
  */
 export function loadCategoriesFromEnv(): ColorCategory[] {
   try {
-    // 首先尝试从配置文件加载
+    // 首先尝试从环境变量加载（优先级最高）
+    const categoriesJson = process.env.NEXT_PUBLIC_CATEGORIES;
+    if (categoriesJson) {
+      console.info('Loading categories from environment variables');
+      const categories = JSON.parse(categoriesJson);
+      return categories.map((category: any) => ({
+        id: category.id || 'default',
+        name: category.name || 'Default Category',
+        nameZh: category.nameZh || '默认分类',
+        description: category.description,
+        icon: category.icon || '📁',
+        color: category.color || '#6B7280',
+        order: category.order || 0,
+      }));
+    }
+
+    // 回退到配置文件
     if (configCategories && configCategories.length > 0) {
+      console.info('Loading categories from config.js file');
       return configCategories.map((category: any) => ({
         id: category.id || 'default',
         name: category.name || 'Default Category',
@@ -144,26 +162,12 @@ export function loadCategoriesFromEnv(): ColorCategory[] {
       }));
     }
 
-    // 回退到环境变量（向后兼容）
-    const categoriesJson = process.env.NEXT_PUBLIC_CATEGORIES;
-    if (!categoriesJson) {
-      console.warn('No categories found in config file or environment variables');
-      return getDefaultCategories();
-    }
-
-    const categories = JSON.parse(categoriesJson);
-    return categories.map((category: any) => ({
-      id: category.id || 'default',
-      name: category.name || 'Default Category',
-      nameZh: category.nameZh || '默认分类',
-      description: category.description,
-      icon: category.icon || '📁',
-      color: category.color || '#6B7280',
-      order: category.order || 0,
-    }));
+    // 最后回退到默认分类
+    console.warn('No categories found in environment variables or config file, using defaults');
+    return getDefaultCategories();
   } catch (error) {
     console.error(
-      'Failed to load categories from config file or environment variables:',
+      'Failed to load categories from environment variables or config file:',
       error
     );
     return getDefaultCategories();

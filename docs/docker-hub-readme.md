@@ -1,6 +1,6 @@
 # GHS Color Next
 
-一款优雅的现代化色彩管理工具 - 用于保存您和您的团队喜欢的颜色，即时迸发灵感。
+现代化色彩管理工具 - 用于保存您和您的团队喜欢的颜色，即时迸发灵感。
 
 ## 🚀 一键部署
 
@@ -57,12 +57,35 @@ docker-compose up -d
 | `NEXT_PUBLIC_APP_NAME` | 应用名称 | `GHS Color Next` |
 | `NEXT_PUBLIC_APP_VERSION` | 应用版本 | `2.0.0` |
 | `NEXT_PUBLIC_GITHUB_URL` | GitHub仓库地址 | `https://github.com/Mystic-Stars/GHS-Color` |
+| `NEXT_PUBLIC_COLORS` | 自定义颜色数据（JSON格式） | 使用内置config.js |
+| `NEXT_PUBLIC_CATEGORIES` | 自定义分类数据（JSON格式） | 使用内置config.js |
 | `PORT` | 应用端口 | `3000` |
+
+### 🎨 自定义颜色配置
+
+支持通过环境变量自定义颜色数据，**优先级：环境变量 > config.js文件**
+
+```bash
+# 自定义颜色配置示例
+docker run -d \
+  -p 3000:3000 \
+  --name ghs-color \
+  -e NEXT_PUBLIC_COLORS='[{"id":"my-red","name":"My Red","nameZh":"我的红色","hex":"#ff0000","description":"Custom red","descriptionZh":"自定义红色","category":"brand","tags":["red"]}]' \
+  -e NEXT_PUBLIC_CATEGORIES='[{"id":"brand","name":"Brand","nameZh":"品牌","description":"Brand colors","icon":"🎨","color":"#6366F1","order":1}]' \
+  mysticstars/ghs-color:latest
+```
+
+## 📋 系统要求
+
+- **内存**: 最少 256MB，推荐 512MB
+- **存储**: 最少 100MB
+- **架构**: 支持 AMD64 和 ARM64
 
 ## 🔗 相关链接
 
 - [GitHub 仓库](https://github.com/Mystic-Stars/GHS-Color)
 - [完整文档](https://github.com/Mystic-Stars/GHS-Color/blob/main/README.md)
+- [Docker 部署指南](https://github.com/Mystic-Stars/GHS-Color/blob/main/docs/docker-guide.md)
 
 ## 📄 许可证
 
