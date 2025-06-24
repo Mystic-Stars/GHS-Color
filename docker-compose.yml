@@ -1,0 +1,30 @@
+# GHS Color Next - 简化版 Docker Compose
+# 用于一键部署，直接使用预构建镜像
+
+version: '3.8'
+
+services:
+  ghs-color:
+    image: mysticstars/ghs-color:latest
+    container_name: ghs-color
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_NAME=GHS Color Next
+      - NEXT_PUBLIC_APP_VERSION=2.0.0
+      - NEXT_PUBLIC_APP_DESCRIPTION=现代化色彩管理工具
+      - NEXT_PUBLIC_APP_DESCRIPTION_EN=Modern Color Management Tool
+      - NEXT_PUBLIC_GITHUB_URL=https://github.com/Mystic-Stars/GHS-Color
+      - NEXT_PUBLIC_SITE_TITLE=GHS Color Next - 现代化色彩管理工具
+      - NEXT_PUBLIC_SITE_DESCRIPTION=一款优雅的现代化色彩管理工具
+      - NEXT_PUBLIC_SITE_TITLE_EN=GHS Color Next - Modern Color Management Tool
+      - NEXT_PUBLIC_SITE_DESCRIPTION_EN=A modern color management tool
+      - NEXT_PUBLIC_SITE_KEYWORDS=GHS Color,color management,color tool,design tool,color picker,palette,颜色管理,色彩工具
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

@@ -45,7 +45,7 @@ const toastVariants = cva(
 );
 
 // Toast图标组件
-const ToastIcon = ({ variant }: { variant?: string }) => {
+const ToastIcon = ({ variant }: { variant?: string | null }) => {
   const iconClass = 'h-5 w-5 flex-shrink-0';
 
   switch (variant) {
