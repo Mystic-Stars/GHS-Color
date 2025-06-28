@@ -115,9 +115,9 @@ export function FolderSelector({
   // 过滤文件夹
   const filteredFolders = useMemo(() => {
     if (!searchKeyword.trim()) {
-      return folders.filter(folder => !folder.isSystem || folder.id === 'favorites');
+      return folders;
     }
-    return searchFolders(searchKeyword).filter(folder => !folder.isSystem || folder.id === 'favorites');
+    return searchFolders(searchKeyword);
   }, [folders, searchKeyword, searchFolders]);
 
   // 初始化选中状态
@@ -309,11 +309,6 @@ export function FolderSelector({
                             {isCurrentFolder && (
                               <Badge variant="secondary" className="text-xs">
                                 {t('folder.current')}
-                              </Badge>
-                            )}
-                            {folder.isSystem && (
-                              <Badge variant="outline" className="text-xs">
-                                {t('folder.system')}
                               </Badge>
                             )}
                           </div>

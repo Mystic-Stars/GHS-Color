@@ -233,7 +233,7 @@ export function FolderManager({
 
 
   const handleDelete = () => {
-    if (!editingFolder || editingFolder.isSystem) return;
+    if (!editingFolder) return;
 
     if (window.confirm(t('folder.deleteConfirm'))) {
       try {
@@ -390,18 +390,14 @@ export function FolderManager({
             </Button>
 
             {isEditing && (
-              <>
-                {!editingFolder?.isSystem && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={handleDelete}
-                    disabled={isSubmitting}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={isSubmitting}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             )}
 
             <Button

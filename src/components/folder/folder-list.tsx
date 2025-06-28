@@ -153,16 +153,11 @@ export function FolderList({
 
 
   const handleDeleteFolder = (folder: ColorFolder) => {
-    if (folder.isSystem) {
-      error(t('folder.cannotDeleteSystem'));
-      return;
-    }
-
     if (window.confirm(t('folder.deleteConfirm'))) {
       try {
         deleteFolder(folder.id);
         success(t('folder.deleteSuccess'));
-        
+
         // 如果删除的是当前选中的文件夹，清除选择
         if (selectedFolderId === folder.id) {
           onFolderSelect?.(null);
@@ -316,18 +311,14 @@ export function FolderList({
                       {t('common.edit')}
                     </DropdownMenuItem>
 
-                    {!folder.isSystem && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteFolder(folder)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          {t('common.delete')}
-                        </DropdownMenuItem>
-                      </>
-                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => handleDeleteFolder(folder)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      {t('common.delete')}
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </DroppableFolder>
