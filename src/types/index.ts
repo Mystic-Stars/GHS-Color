@@ -18,6 +18,10 @@ export type {
   HSVColor,
   ColorConverterInput,
   ColorConverterOutput,
+  ColorFolder,
+  ColorFolderRelation,
+  FolderStats,
+  FolderFilter,
 } from './color';
 
 // 应用相关类型

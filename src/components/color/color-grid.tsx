@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ColorCard } from './color-card';
+import { DraggableColorCard } from '@/components/dnd';
 import { useColorStore, useAppStore } from '@/store';
 import { useTranslation } from '@/hooks/use-translation';
 import type { ExtendedColor } from '@/types';
@@ -9,9 +10,20 @@ import type { ExtendedColor } from '@/types';
 interface ColorGridProps {
   colors?: ExtendedColor[];
   onColorClick?: (color: ExtendedColor) => void;
+  viewMode?: 'grid' | 'list' | 'compact';
+  showRemoveFromFolder?: boolean;
+  currentFolderId?: string;
+  onRemoveFromFolder?: (colorId: string) => void;
 }
 
-export function ColorGrid({ colors, onColorClick }: ColorGridProps) {
+export function ColorGrid({
+  colors,
+  onColorClick,
+  viewMode: propViewMode,
+  showRemoveFromFolder = false,
+  currentFolderId,
+  onRemoveFromFolder,
+}: ColorGridProps) {
   const { getFilteredColors } = useColorStore();
   const { settings } = useAppStore();
   const { t } = useTranslation();
@@ -30,8 +42,10 @@ export function ColorGrid({ colors, onColorClick }: ColorGridProps) {
     );
   }
 
+  const viewMode = propViewMode || settings.viewMode;
+
   const getGridClassName = () => {
-    switch (settings.viewMode) {
+    switch (viewMode) {
       case 'grid':
         return 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4';
       case 'list':
@@ -46,10 +60,10 @@ export function ColorGrid({ colors, onColorClick }: ColorGridProps) {
   return (
     <div className={getGridClassName()}>
       {displayColors.map((color) => (
-        <ColorCard
+        <DraggableColorCard
           key={color.id}
           color={color}
-          showDetails={settings.viewMode !== 'compact'}
+          showDetails={viewMode !== 'compact'}
           onClick={() => onColorClick?.(color)}
         />
       ))}

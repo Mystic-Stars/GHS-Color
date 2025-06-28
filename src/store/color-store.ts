@@ -8,6 +8,7 @@ import type {
 } from '@/types';
 import { generateId } from '@/utils';
 import { useAppStore } from './app-store';
+import { useFolderStore } from './folder-store';
 
 interface ColorState {
   // 数据状态
@@ -77,6 +78,8 @@ const defaultFilter: ColorFilter = {
   tags: [],
   temperatures: [],
   favoritesOnly: false,
+  folders: [],
+  ungroupedOnly: false,
 };
 
 const defaultSort: ColorSort = {
@@ -322,6 +325,32 @@ export const useColorStore = create<ColorStore>()((set, get) => ({
 
     if (filter.favoritesOnly) {
       filteredColors = filteredColors.filter((color) => color.isFavorite);
+    }
+
+    // 文件夹过滤
+    if (filter.folders && filter.folders.length > 0) {
+      const folderStore = useFolderStore.getState();
+      const colorIdsInFolders = new Set<string>();
+
+      filter.folders.forEach(folderId => {
+        const colorsInFolder = folderStore.getColorsInFolder(folderId, colors);
+        colorsInFolder.forEach(color => colorIdsInFolders.add(color.id));
+      });
+
+      filteredColors = filteredColors.filter((color) =>
+        colorIdsInFolders.has(color.id)
+      );
+    }
+
+    // 未分组颜色过滤
+    if (filter.ungroupedOnly) {
+      const folderStore = useFolderStore.getState();
+      const unassignedColors = folderStore.getUnassignedColors(colors);
+      const unassignedColorIds = new Set(unassignedColors.map(c => c.id));
+
+      filteredColors = filteredColors.filter((color) =>
+        unassignedColorIds.has(color.id)
+      );
     }
 
     // 应用排序

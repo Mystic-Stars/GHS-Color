@@ -91,6 +91,20 @@ export interface ColorFilter {
   temperatures?: ColorTemperature[];
   /** 是否只显示收藏 */
   favoritesOnly?: boolean;
+  /** 文件夹过滤 */
+  folders?: string[];
+  /** 是否只显示未分组的颜色 */
+  ungroupedOnly?: boolean;
+}
+
+/**
+ * 文件夹过滤器
+ */
+export interface FolderFilter {
+  /** 搜索关键词 */
+  keyword?: string;
+  /** 按颜色数量排序 */
+  sortByColorCount?: boolean;
 }
 
 /**
@@ -186,6 +200,58 @@ export interface HSVColor {
   h: number;
   s: number;
   v: number;
+}
+
+/**
+ * 颜色文件夹接口
+ */
+export interface ColorFolder {
+  /** 文件夹ID */
+  id: string;
+  /** 文件夹名称 */
+  name: string;
+  /** 文件夹描述 */
+  description?: string;
+  /** 文件夹图标 */
+  icon?: string;
+  /** 文件夹图标颜色 */
+  iconColor?: string;
+  /** 创建时间 */
+  createdAt: string;
+  /** 更新时间 */
+  updatedAt: string;
+  /** 排序权重 */
+  order?: number;
+}
+
+/**
+ * 颜色与文件夹的关联关系
+ */
+export interface ColorFolderRelation {
+  /** 关联ID */
+  id: string;
+  /** 颜色ID */
+  colorId: string;
+  /** 文件夹ID */
+  folderId: string;
+  /** 添加时间 */
+  addedAt: string;
+  /** 添加者（可选，用于多用户场景） */
+  addedBy?: string;
+}
+
+/**
+ * 文件夹统计信息
+ */
+export interface FolderStats {
+  /** 文件夹ID */
+  folderId: string;
+  /** 颜色数量 */
+  colorCount: number;
+  /** 最近添加的颜色 */
+  recentColors: ExtendedColor[];
+  /** 最后更新时间 */
+  lastUpdated: string;
 }
 
 /**

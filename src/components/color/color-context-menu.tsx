@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Copy,
   Heart,
@@ -10,9 +10,13 @@ import {
   Hash,
   Paintbrush,
   Eye,
+  FolderPlus,
+  Folder,
 } from 'lucide-react';
 import { ContextMenu, type ContextMenuItem } from '@/components/ui/context-menu';
+import { FolderSelector } from '@/components/folder';
 import { useColorStore, useAppStore } from '@/store';
+import { useFolderStore } from '@/store/folder-store';
 import { useTranslation } from '@/hooks/use-translation';
 import { useToast } from '@/components/toast-provider';
 import { formatColor, copyToClipboard } from '@/utils';
@@ -34,9 +38,12 @@ export function ColorContextMenu({
   className,
 }: ColorContextMenuProps) {
   const { toggleFavorite, incrementUsage } = useColorStore();
+  const { addColorToFolders, removeColorFromFolders, getFoldersForColor } = useFolderStore();
   const { settings } = useAppStore();
   const { t } = useTranslation();
   const { success, error, info } = useToast();
+
+  const [showFolderSelector, setShowFolderSelector] = useState(false);
 
   // 复制颜色值
   const handleCopyColor = async (format: ColorFormat) => {
@@ -83,6 +90,33 @@ export function ColorContextMenu({
   // 查看详情
   const handleViewDetails = () => {
     onViewDetails?.();
+  };
+
+  // 添加到文件夹
+  const handleAddToFolders = () => {
+    setShowFolderSelector(true);
+  };
+
+  // 确认文件夹选择
+  const handleFolderConfirm = (selectedFolderIds: string[]) => {
+    const currentFolderIds = getFoldersForColor(color.id).map(f => f.id);
+
+    // 找出需要添加和移除的文件夹
+    const toAdd = selectedFolderIds.filter(id => !currentFolderIds.includes(id));
+    const toRemove = currentFolderIds.filter(id => !selectedFolderIds.includes(id));
+
+    // 执行添加和移除操作
+    if (toAdd.length > 0) {
+      addColorToFolders(color.id, toAdd);
+    }
+    if (toRemove.length > 0) {
+      removeColorFromFolders(color.id, toRemove);
+    }
+
+    // 显示成功消息
+    if (toAdd.length > 0 || toRemove.length > 0) {
+      success(t('folder.updateSuccess'));
+    }
   };
 
   // 构建菜单项
@@ -143,6 +177,20 @@ export function ColorContextMenu({
       icon: color.isFavorite ? HeartOff : Heart,
       onClick: handleToggleFavorite,
     },
+    // 添加到文件夹
+    {
+      id: 'add-to-folders',
+      label: t('folder.addToFolders'),
+      icon: Folder,
+      onClick: handleAddToFolders,
+    },
+    // 分隔符
+    {
+      id: 'separator-3',
+      label: '',
+      onClick: () => {},
+      separator: true,
+    },
     // 查看详情
     {
       id: 'view-details',
@@ -154,12 +202,25 @@ export function ColorContextMenu({
   ];
 
   return (
-    <ContextMenu
-      items={menuItems}
-      disabled={disabled}
-      className={className}
-    >
-      {children}
-    </ContextMenu>
+    <>
+      <ContextMenu
+        items={menuItems}
+        disabled={disabled}
+        className={className}
+      >
+        {children}
+      </ContextMenu>
+
+      {/* 文件夹选择器 */}
+      <FolderSelector
+        open={showFolderSelector}
+        onOpenChange={setShowFolderSelector}
+        color={color}
+        onConfirm={handleFolderConfirm}
+        title={t('folder.selectFoldersForColor')}
+        description={t('folder.selectFoldersDescription')}
+        showCreateButton={false}
+      />
+    </>
   );
 }

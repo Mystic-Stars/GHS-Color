@@ -24,6 +24,10 @@ export const zhCN = {
     previous: '上一步',
     submit: '提交',
     reset: '重置',
+    duplicate: '复制',
+    selectAll: '全选',
+    deselectAll: '取消全选',
+    saving: '保存中...',
   },
 
   // 头部导航
@@ -136,6 +140,9 @@ export const zhCN = {
     addedToFavorites: '已添加到收藏夹',
     removedFromFavorites: '已从收藏夹移除',
     viewDetails: '查看详情',
+    searchInFolder: '在文件夹中搜索颜色...',
+    noSearchResults: '未找到匹配的颜色',
+    tryDifferentKeyword: '尝试使用不同的关键词',
   },
 
   // 提交指南
@@ -274,5 +281,76 @@ export const zhCN = {
     copied: '复制成功',
     deleted: '删除成功',
     updated: '更新成功',
+  },
+
+  // 文件夹
+  folder: {
+    // 基本操作
+    create: '创建文件夹',
+    edit: '编辑文件夹',
+    delete: '删除文件夹',
+    manageFolders: '管理文件夹',
+    addToFolders: '添加到文件夹',
+    selectFolders: '选择文件夹',
+    selectFoldersForColor: '为颜色选择文件夹',
+    selectFoldersDescription: '选择要添加此颜色的文件夹',
+
+    // 文件夹信息
+    name: '文件夹名称',
+    nameZh: '中文名称',
+    description: '描述',
+    descriptionZh: '中文描述',
+    icon: '图标',
+    iconColor: '图标颜色',
+    colors: '个颜色',
+    system: '系统',
+    current: '当前',
+
+    // 占位符
+    namePlaceholder: '请输入文件夹名称',
+    nameZhPlaceholder: '请输入中文名称',
+    descriptionPlaceholder: '请输入描述（可选）',
+    descriptionZhPlaceholder: '请输入中文描述（可选）',
+    searchPlaceholder: '搜索文件夹...',
+    untitled: '未命名文件夹',
+    noDescription: '暂无描述',
+
+    // 验证错误
+    nameRequired: '文件夹名称不能为空',
+    nameZhRequired: '中文名称不能为空',
+    nameTooLong: '文件夹名称不能超过50个字符',
+    nameZhTooLong: '中文名称不能超过50个字符',
+    descriptionTooLong: '描述不能超过200个字符',
+    descriptionZhTooLong: '中文描述不能超过200个字符',
+    nameExists: '文件夹名称已存在',
+    nameZhExists: '中文名称已存在',
+
+    // 状态信息
+    noFolders: '暂无文件夹',
+    noSearchResults: '未找到匹配的文件夹',
+    selectedCount: '已选择 {{count}} 个文件夹',
+    oneSelected: '已选择 1 个文件夹',
+    noSelection: '未选择文件夹',
+
+    // 操作结果
+    createSuccess: '文件夹创建成功',
+    createFailed: '文件夹创建失败',
+    updateSuccess: '文件夹更新成功',
+    updateFailed: '文件夹更新失败',
+    deleteSuccess: '文件夹删除成功',
+    deleteFailed: '文件夹删除失败',
+    deleteConfirm: '确定要删除这个文件夹吗？',
+    cannotDeleteSystem: '不能删除系统文件夹',
+
+    // 文件夹视图
+    notFound: '文件夹不存在',
+    noColors: '此文件夹中暂无颜色',
+    addColorsToFolder: '使用右键菜单将颜色添加到此文件夹',
+    removeColorConfirm: '确定要从此文件夹中移除这个颜色吗？',
+    colorRemoved: '颜色已从文件夹中移除',
+    colorAddedToFolder: '颜色已添加到文件夹',
+    colorRemovedFromFolder: '颜色已从文件夹中移除',
+    addColorFailed: '添加颜色到文件夹失败',
+    removeColorFailed: '从文件夹移除颜色失败',
   },
 } as const;

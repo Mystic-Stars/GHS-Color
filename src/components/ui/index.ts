@@ -35,3 +35,24 @@ export {
 export { Select, type SelectOption } from './select';
 export { FlagIcon } from './flag-icon';
 export { ContextMenu, type ContextMenuItem, type ContextMenuProps } from './context-menu';
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from './dropdown-menu';
+export { Label } from './label';
+export { Textarea } from './textarea';
+export { ScrollArea, ScrollBar } from './scroll-area';
+export { Checkbox } from './checkbox';

@@ -13,7 +13,7 @@ export function useTranslation() {
 
   // 翻译函数
   const t = useCallback(
-    (key: string) => translate(currentLanguage, key),
+    (key: string, values?: Record<string, any>) => translate(currentLanguage, key, values),
     [currentLanguage]
   );
 

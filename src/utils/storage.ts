@@ -148,13 +148,20 @@ export const STORAGE_KEYS = {
   COLORS: 'ghs-color-colors',
   CATEGORIES: 'ghs-color-categories',
 
+  // 文件夹数据
+  FOLDERS: 'ghs-color-folders',
+  FOLDER_RELATIONS: 'ghs-color-folder-relations',
+  FOLDER_STATS: 'ghs-color-folder-stats',
+
   // UI状态
   SIDEBAR_STATE: 'ghs-color-sidebar-state',
   THEME: 'ghs-color-theme',
+  FOLDER_VIEW_STATE: 'ghs-color-folder-view-state',
 
   // 缓存
   RECENT_SEARCHES: 'ghs-color-recent-searches',
   RECENT_COLORS: 'ghs-color-recent-colors',
+  RECENT_FOLDERS: 'ghs-color-recent-folders',
 
   // 备份
   BACKUP_PREFIX: 'ghs-color-backup-',

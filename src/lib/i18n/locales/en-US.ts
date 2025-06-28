@@ -24,6 +24,10 @@ export const enUS = {
     previous: 'Previous',
     submit: 'Submit',
     reset: 'Reset',
+    duplicate: 'Duplicate',
+    selectAll: 'Select All',
+    deselectAll: 'Deselect All',
+    saving: 'Saving...',
   },
 
   // Header
@@ -136,6 +140,9 @@ export const enUS = {
     addedToFavorites: 'Added to favorites',
     removedFromFavorites: 'Removed from favorites',
     viewDetails: 'View Details',
+    searchInFolder: 'Search colors in folder...',
+    noSearchResults: 'No matching colors found',
+    tryDifferentKeyword: 'Try using different keywords',
   },
 
   // Submit Guide
@@ -278,5 +285,76 @@ export const enUS = {
     copied: 'Copied successfully',
     deleted: 'Deleted successfully',
     updated: 'Updated successfully',
+  },
+
+  // Folder
+  folder: {
+    // Basic Operations
+    create: 'Create Folder',
+    edit: 'Edit Folder',
+    delete: 'Delete Folder',
+    manageFolders: 'Manage Folders',
+    addToFolders: 'Add to Folders',
+    selectFolders: 'Select Folders',
+    selectFoldersForColor: 'Select Folders for Color',
+    selectFoldersDescription: 'Select folders to add this color to',
+
+    // Folder Information
+    name: 'Folder Name',
+    nameZh: 'Chinese Name',
+    description: 'Description',
+    descriptionZh: 'Chinese Description',
+    icon: 'Icon',
+    iconColor: 'Icon Color',
+    colors: 'colors',
+    system: 'System',
+    current: 'Current',
+
+    // Placeholders
+    namePlaceholder: 'Enter folder name',
+    nameZhPlaceholder: 'Enter Chinese name',
+    descriptionPlaceholder: 'Enter description (optional)',
+    descriptionZhPlaceholder: 'Enter Chinese description (optional)',
+    searchPlaceholder: 'Search folders...',
+    untitled: 'Untitled Folder',
+    noDescription: 'No description',
+
+    // Validation Errors
+    nameRequired: 'Folder name is required',
+    nameZhRequired: 'Chinese name is required',
+    nameTooLong: 'Folder name cannot exceed 50 characters',
+    nameZhTooLong: 'Chinese name cannot exceed 50 characters',
+    descriptionTooLong: 'Description cannot exceed 200 characters',
+    descriptionZhTooLong: 'Chinese description cannot exceed 200 characters',
+    nameExists: 'Folder name already exists',
+    nameZhExists: 'Chinese name already exists',
+
+    // Status Information
+    noFolders: 'No folders',
+    noSearchResults: 'No matching folders found',
+    selectedCount: '{{count}} folders selected',
+    oneSelected: '1 folder selected',
+    noSelection: 'No folders selected',
+
+    // Operation Results
+    createSuccess: 'Folder created successfully',
+    createFailed: 'Failed to create folder',
+    updateSuccess: 'Folder updated successfully',
+    updateFailed: 'Failed to update folder',
+    deleteSuccess: 'Folder deleted successfully',
+    deleteFailed: 'Failed to delete folder',
+    deleteConfirm: 'Are you sure you want to delete this folder?',
+    cannotDeleteSystem: 'Cannot delete system folder',
+
+    // Folder View
+    notFound: 'Folder not found',
+    noColors: 'No colors in this folder',
+    addColorsToFolder: 'Use right-click menu to add colors to this folder',
+    removeColorConfirm: 'Are you sure you want to remove this color from the folder?',
+    colorRemoved: 'Color removed from folder',
+    colorAddedToFolder: 'Color added to folder',
+    colorRemovedFromFolder: 'Color removed from folder',
+    addColorFailed: 'Failed to add color to folder',
+    removeColorFailed: 'Failed to remove color from folder',
   },
 } as const;

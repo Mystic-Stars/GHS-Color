@@ -49,6 +49,19 @@ export interface UserPreferences {
   customCategories: string[];
   /** 快捷键设置 */
   shortcuts: Record<string, string>;
+  /** 文件夹相关偏好 */
+  folderPreferences: {
+    /** 默认文件夹视图模式 */
+    defaultViewMode: 'grid' | 'list';
+    /** 是否显示空文件夹 */
+    showEmptyFolders: boolean;
+    /** 文件夹排序方式 */
+    sortBy: 'name' | 'createdAt' | 'colorCount';
+    /** 排序顺序 */
+    sortOrder: 'asc' | 'desc';
+    /** 最近访问的文件夹ID列表 */
+    recentFolderIds: string[];
+  };
 }
 
 /**

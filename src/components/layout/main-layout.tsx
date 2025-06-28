@@ -10,6 +10,7 @@ interface MainLayoutProps {
   onSubmitColor?: () => void;
   onSettings?: () => void;
   onBackToColors?: () => void;
+  onFolderSelect?: (folderId: string | null) => void;
 }
 
 export function MainLayout({
@@ -17,6 +18,7 @@ export function MainLayout({
   onSubmitColor,
   onSettings,
   onBackToColors,
+  onFolderSelect,
 }: MainLayoutProps) {
   const { sidebarOpen, setSidebarOpen, settings } = useAppStore();
   const { updateStats } = useColorStore();
@@ -69,7 +71,10 @@ export function MainLayout({
       {/* 主要内容区域 */}
       <div className="flex h-[calc(100vh-4rem)]">
         {/* 侧边栏 */}
-        <Sidebar onBackToColors={onBackToColors} />
+        <Sidebar
+          onBackToColors={onBackToColors}
+          onFolderSelect={onFolderSelect}
+        />
 
         {/* 主内容区 */}
         <main

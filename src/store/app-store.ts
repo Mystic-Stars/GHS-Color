@@ -31,6 +31,11 @@ interface AppActions {
   addFavoriteColor: (colorId: string) => void;
   removeFavoriteColor: (colorId: string) => void;
 
+  // 文件夹偏好操作
+  updateFolderPreferences: (preferences: Partial<UserPreferences['folderPreferences']>) => void;
+  addRecentFolder: (folderId: string) => void;
+  clearRecentFolders: () => void;
+
   // UI状态操作
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
@@ -66,6 +71,13 @@ const defaultPreferences: UserPreferences = {
     'copy-rgb': 'Ctrl+Shift+C',
     'toggle-favorite': 'F',
     search: 'Ctrl+K',
+  },
+  folderPreferences: {
+    defaultViewMode: 'grid',
+    showEmptyFolders: true,
+    sortBy: 'name',
+    sortOrder: 'asc',
+    recentFolderIds: [],
   },
 };
 
@@ -149,6 +161,52 @@ export const useAppStore = create<AppStore>()(
             favoriteColorIds: state.preferences.favoriteColorIds.filter(
               (id) => id !== colorId
             ),
+          },
+        }));
+      },
+
+      // 文件夹偏好操作
+      updateFolderPreferences: (newFolderPreferences) => {
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            folderPreferences: {
+              ...state.preferences.folderPreferences,
+              ...newFolderPreferences,
+            },
+          },
+        }));
+      },
+
+      addRecentFolder: (folderId) => {
+        set((state) => {
+          const recentFolderIds = [
+            folderId,
+            ...state.preferences.folderPreferences.recentFolderIds.filter(
+              (id) => id !== folderId
+            ),
+          ].slice(0, 10); // 保留最近10个文件夹
+
+          return {
+            preferences: {
+              ...state.preferences,
+              folderPreferences: {
+                ...state.preferences.folderPreferences,
+                recentFolderIds,
+              },
+            },
+          };
+        });
+      },
+
+      clearRecentFolders: () => {
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            folderPreferences: {
+              ...state.preferences.folderPreferences,
+              recentFolderIds: [],
+            },
           },
         }));
       },

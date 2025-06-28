@@ -25,8 +25,15 @@ function getNestedValue(obj: any, path: string): string {
   return path.split('.').reduce((current, key) => current?.[key], obj) || path;
 }
 
+// 简单的插值函数
+function interpolate(template: string, values: Record<string, any>): string {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return values[key] !== undefined ? String(values[key]) : match;
+  });
+}
+
 // 翻译函数
-export function translate(language: Language, key: string): string {
+export function translate(language: Language, key: string, values?: Record<string, any>): string {
   const translation = translations[language];
   if (!translation) {
     console.warn(`Translation not found for language: ${language}`);
@@ -39,12 +46,17 @@ export function translate(language: Language, key: string): string {
     return key;
   }
 
+  // 如果有插值参数，进行插值处理
+  if (values) {
+    return interpolate(value, values);
+  }
+
   return value;
 }
 
 // 创建翻译函数的快捷方式
 export function createTranslator(language: Language) {
-  return (key: string) => translate(language, key);
+  return (key: string, values?: Record<string, any>) => translate(language, key, values);
 }
 
 // 支持的语言列表

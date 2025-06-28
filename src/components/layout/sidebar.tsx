@@ -6,13 +6,15 @@ import { Button, Badge } from '@/components/ui';
 import { useAppStore, useColorStore } from '@/store';
 import { useTranslation, useLocalizedText } from '@/hooks/use-translation';
 import { ColorDetailModal, ColorConverterModal, ColorConfigGeneratorModal, ColorContextMenu } from '@/components/color';
+import { FolderList } from '@/components/folder';
 import type { ExtendedColor } from '@/types';
 
 interface SidebarProps {
   onBackToColors?: () => void;
+  onFolderSelect?: (folderId: string | null) => void;
 }
 
-export function Sidebar({ onBackToColors }: SidebarProps) {
+export function Sidebar({ onBackToColors, onFolderSelect }: SidebarProps) {
   const { sidebarOpen, setSidebarOpen, settings } = useAppStore();
   const { categories, stats, filter, setFilter, clearFilter, incrementUsage } =
     useColorStore();
@@ -116,7 +118,7 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
       />
 
       {/* 侧边栏 */}
-      <aside className="fixed left-0 top-0 h-full w-80 bg-background border-r z-50 md:relative md:z-auto">
+      <aside className="fixed left-0 top-0 h-full w-80 bg-background border-r z-30 md:relative md:z-auto">
         <div className="flex flex-col h-full">
           {/* 侧边栏头部 */}
           <div className="flex items-center justify-between p-4 border-b">
@@ -203,6 +205,23 @@ export function Sidebar({ onBackToColors }: SidebarProps) {
                   );
                 })}
               </div>
+            </div>
+
+            {/* 文件夹管理 */}
+            <div>
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                <Folder className="h-4 w-4" />
+                {t('folder.manageFolders')}
+              </h3>
+              <FolderList
+                onFolderSelect={(folderId) => {
+                  onFolderSelect?.(folderId);
+                  // 不要调用 onBackToColors，因为我们想要显示文件夹视图
+                }}
+                selectedFolderId={filter.folders?.[0] || null}
+                showCreateButton={true}
+                compact={true}
+              />
             </div>
 
             {/* 颜色温度统计 */}
