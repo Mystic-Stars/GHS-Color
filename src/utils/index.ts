@@ -40,6 +40,23 @@ export {
   readFileAsText,
 } from './import-export';
 
+// 文件夹分享工具
+export {
+  createSharedFolderData,
+  encodeSharedFolderData,
+  decodeSharedFolderData,
+  generateShareUrl,
+  getSharedDataFromUrl,
+  clearShareUrlParam,
+  checkFolderNameConflict,
+  generateUniqueFolderName,
+  estimateShareDataSize,
+  isShareDataExpired,
+  formatShareDataInfo,
+  SHARE_DATA_VERSION,
+  SHARE_URL_PARAM,
+} from './folder-share';
+
 // 键盘快捷键工具
 export {
   keyboardManager,

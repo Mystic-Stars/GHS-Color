@@ -356,5 +356,51 @@ export const enUS = {
     colorRemovedFromFolder: 'Color removed from folder',
     addColorFailed: 'Failed to add color to folder',
     removeColorFailed: 'Failed to remove color from folder',
+
+    // Share Feature
+    share: {
+      title: 'Share Folder',
+      generate: 'Generate Share Link',
+      generating: 'Generating...',
+      regenerate: 'Regenerate',
+      shareUrl: 'Share URL',
+      copySuccess: 'Share link copied to clipboard',
+      copyFailed: 'Failed to copy share link',
+      generateSuccess: 'Share link generated successfully',
+      generateFailed: 'Failed to generate share link',
+      qrCode: 'QR Code',
+      qrCodeNote: 'Scan QR code to access share link',
+      downloadQrCode: 'Download QR Code',
+      qrCodeDownload: 'QR code download feature coming soon',
+      generatingQrCode: 'Generating QR code...',
+      qrCodeGenerateFailed: 'Failed to generate QR code',
+      qrCodeDownloadSuccess: 'QR code downloaded successfully',
+      dataSize: 'Data Size',
+      urlNote: 'Share link contains complete folder data',
+      options: 'Share Options',
+      includeDescriptions: 'Include color descriptions',
+      includeTags: 'Include tag information',
+      includeUsageStats: 'Include usage statistics',
+    },
+
+    // Import Feature
+    import: {
+      title: 'Import Shared Folder',
+      success: 'Folder imported successfully, {{count}} colors imported',
+      failed: 'Failed to import folder',
+      importing: 'Importing...',
+      confirm: 'Confirm Import',
+      nameConflict: 'Folder name "{{name}}" already exists',
+      conflictStrategy: 'Conflict Resolution',
+      customName: 'Custom Name',
+
+      colorPreview: 'Color Preview',
+      moreColors: 'more colors',
+      strategy: {
+        rename: 'Rename new folder',
+        replace: 'Replace existing folder',
+        merge: 'Merge with existing folder',
+      },
+    },
   },
 } as const;

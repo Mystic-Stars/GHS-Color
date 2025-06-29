@@ -352,5 +352,51 @@ export const zhCN = {
     colorRemovedFromFolder: '颜色已从文件夹中移除',
     addColorFailed: '添加颜色到文件夹失败',
     removeColorFailed: '从文件夹移除颜色失败',
+
+    // 分享功能
+    share: {
+      title: '分享文件夹',
+      generate: '生成分享链接',
+      generating: '生成中...',
+      regenerate: '重新生成',
+      shareUrl: '分享链接',
+      copySuccess: '分享链接已复制到剪贴板',
+      copyFailed: '复制分享链接失败',
+      generateSuccess: '分享链接生成成功',
+      generateFailed: '生成分享链接失败',
+      qrCode: '二维码',
+      qrCodeNote: '扫描二维码访问分享链接',
+      downloadQrCode: '下载二维码',
+      qrCodeDownload: '二维码下载功能即将推出',
+      generatingQrCode: '生成二维码中...',
+      qrCodeGenerateFailed: '生成二维码失败',
+      qrCodeDownloadSuccess: '二维码下载成功',
+      dataSize: '数据大小',
+      urlNote: '分享链接包含完整的文件夹数据',
+      options: '分享选项',
+      includeDescriptions: '包含颜色描述',
+      includeTags: '包含标签信息',
+      includeUsageStats: '包含使用统计',
+    },
+
+    // 导入功能
+    import: {
+      title: '导入分享文件夹',
+      success: '文件夹导入成功，共导入 {{count}} 个颜色',
+      failed: '文件夹导入失败',
+      importing: '导入中...',
+      confirm: '确认导入',
+      nameConflict: '文件夹名称 "{{name}}" 已存在',
+      conflictStrategy: '冲突处理方式',
+      customName: '自定义名称',
+
+      colorPreview: '颜色预览',
+      moreColors: '更多颜色',
+      strategy: {
+        rename: '重命名新文件夹',
+        replace: '替换现有文件夹',
+        merge: '合并到现有文件夹',
+      },
+    },
   },
 } as const;

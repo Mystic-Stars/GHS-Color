@@ -7,6 +7,7 @@ import {
   Edit2,
   Trash2,
   Copy,
+  Share2,
   FolderX,
   Search,
   X,
@@ -31,6 +32,7 @@ import {
 } from '@/components/ui';
 import { ColorGrid } from '@/components/color';
 import { FolderManager } from './folder-manager';
+import { FolderShareDialog } from './folder-share-dialog';
 import { useFolderStore } from '@/store/folder-store';
 import { useColorStore } from '@/store/color-store';
 import { useAppStore } from '@/store/app-store';
@@ -117,9 +119,10 @@ export function FolderView({
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   const folder = getFolderById(folderId);
-  const folderColors = getColorsInFolder(folderId, colors);
+  const folderColors = getColorsInFolder(folderId);
   const folderStats = getFolderStats(folderId);
 
   // 过滤颜色
@@ -166,7 +169,9 @@ export function FolderView({
     setShowEditModal(true);
   };
 
-
+  const handleShareFolder = () => {
+    setShowShareDialog(true);
+  };
 
   const handleDeleteFolder = () => {
     if (window.confirm(t('folder.deleteConfirm'))) {
@@ -226,31 +231,45 @@ export function FolderView({
                 </div>
               </div>
 
-              {/* 操作菜单 */}
-              {allowEdit && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleEditFolder}>
-                      <Edit2 className="h-4 w-4 mr-2" />
-                      {t('common.edit')}
-                    </DropdownMenuItem>
+              {/* 操作按钮 */}
+              <div className="flex items-center gap-2">
+                {/* 分享按钮 */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleShareFolder}
+                  className="gap-2"
+                >
+                  <Share2 className="h-4 w-4" />
+                  {t('folder.share.title')}
+                </Button>
 
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleDeleteFolder}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      {t('common.delete')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                {/* 更多操作菜单 */}
+                {allowEdit && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={handleEditFolder}>
+                        <Edit2 className="h-4 w-4 mr-2" />
+                        {t('common.edit')}
+                      </DropdownMenuItem>
+
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={handleDeleteFolder}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {t('common.delete')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </div>
           </CardHeader>
         </Card>
@@ -319,6 +338,15 @@ export function FolderView({
           // 文件夹更新后会自动刷新
         }}
       />
+
+      {/* 分享文件夹对话框 */}
+      {folder && (
+        <FolderShareDialog
+          folder={folder}
+          open={showShareDialog}
+          onOpenChange={setShowShareDialog}
+        />
+      )}
     </div>
   );
 }

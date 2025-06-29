@@ -333,7 +333,7 @@ export const useColorStore = create<ColorStore>()((set, get) => ({
       const colorIdsInFolders = new Set<string>();
 
       filter.folders.forEach(folderId => {
-        const colorsInFolder = folderStore.getColorsInFolder(folderId, colors);
+        const colorsInFolder = folderStore.getColorsInFolder(folderId);
         colorsInFolder.forEach(color => colorIdsInFolders.add(color.id));
       });
 

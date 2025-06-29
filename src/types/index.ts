@@ -22,6 +22,11 @@ export type {
   ColorFolderRelation,
   FolderStats,
   FolderFilter,
+  SharedFolderData,
+  FolderImportResult,
+  FolderImportOptions,
+  FolderConflictStrategy,
+  FolderShareConfig,
 } from './color';
 
 // 应用相关类型

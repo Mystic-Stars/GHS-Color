@@ -6,9 +6,20 @@ import type {
   FolderStats,
   FolderFilter,
   ExtendedColor,
+  SharedFolderData,
+  FolderImportResult,
+  FolderImportOptions,
+  FolderConflictStrategy,
+  FolderShareConfig,
 } from '@/types';
 import { generateId } from '@/utils';
 import { storage, STORAGE_KEYS } from '@/utils/storage';
+import {
+  createSharedFolderData,
+  generateShareUrl,
+  checkFolderNameConflict,
+  generateUniqueFolderName,
+} from '@/utils/folder-share';
 
 interface FolderState {
   // 数据状态
@@ -41,7 +52,7 @@ interface FolderActions {
 
   // 查询操作
   getFolderById: (id: string) => ColorFolder | null;
-  getColorsInFolder: (folderId: string, colors: ExtendedColor[]) => ExtendedColor[];
+  getColorsInFolder: (folderId: string) => ExtendedColor[];
   getFoldersForColor: (colorId: string) => ColorFolder[];
   getUnassignedColors: (colors: ExtendedColor[]) => ExtendedColor[];
   searchFolders: (keyword: string) => ColorFolder[];
@@ -49,6 +60,9 @@ interface FolderActions {
   // 统计操作
   updateFolderStats: (colors: ExtendedColor[]) => void;
   getFolderStats: (folderId: string) => FolderStats | null;
+
+  // 工具方法
+  addRecentFolder: (folderId: string) => void;
 
   // 选择操作
   selectFolder: (id: string | null) => void;
@@ -67,6 +81,18 @@ interface FolderActions {
   // 状态管理
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+
+  // 分享功能
+  generateShareUrl: (folderId: string, config?: FolderShareConfig) => Promise<string>;
+  importSharedFolder: (
+    sharedData: SharedFolderData,
+    options?: FolderImportOptions
+  ) => Promise<FolderImportResult>;
+  handleFolderConflict: (
+    sharedData: SharedFolderData,
+    strategy: FolderConflictStrategy,
+    customName?: string
+  ) => Promise<FolderImportResult>;
 }
 
 type FolderStore = FolderState & FolderActions;
@@ -208,13 +234,16 @@ export const useFolderStore = create<FolderStore>()(
         return state.folders.find((folder) => folder.id === id) || null;
       },
 
-      getColorsInFolder: (folderId, colors) => {
+      getColorsInFolder: (folderId) => {
         const state = get();
+        const { useColorStore } = require('@/store/color-store');
+        const colorStore = useColorStore.getState();
+
         const colorIds = state.relations
           .filter((relation) => relation.folderId === folderId)
           .map((relation) => relation.colorId);
 
-        return colors.filter((color) => colorIds.includes(color.id));
+        return colorStore.colors.filter((color: ExtendedColor) => colorIds.includes(color.id));
       },
 
       getFoldersForColor: (colorId) => {
@@ -250,7 +279,7 @@ export const useFolderStore = create<FolderStore>()(
         const stats: Record<string, FolderStats> = {};
 
         state.folders.forEach((folder) => {
-          const folderColors = get().getColorsInFolder(folder.id, colors);
+          const folderColors = get().getColorsInFolder(folder.id);
           const recentColors = folderColors
             .sort((a, b) => new Date(b.updatedAt || '').getTime() - new Date(a.updatedAt || '').getTime())
             .slice(0, 5);
@@ -357,6 +386,127 @@ export const useFolderStore = create<FolderStore>()(
 
       setError: (error) => {
         set({ error });
+      },
+
+      // 工具方法实现
+
+      addRecentFolder: (folderId) => {
+        // 这里可以实现最近访问文件夹的逻辑
+        // 暂时留空，后续可以扩展
+      },
+
+      // 分享功能实现
+      generateShareUrl: async (folderId, config = {}) => {
+        const state = get();
+        const folder = state.folders.find(f => f.id === folderId);
+
+        if (!folder) {
+          throw new Error('文件夹不存在');
+        }
+
+        const colors = get().getColorsInFolder(folderId);
+        const sharedData = createSharedFolderData(folder, colors, config);
+
+        return generateShareUrl(sharedData);
+      },
+
+      importSharedFolder: async (sharedData, options = {}) => {
+        const state = get();
+
+        try {
+          // 检查文件夹名称冲突
+          const hasConflict = checkFolderNameConflict(sharedData.folder.name, state.folders);
+
+          if (hasConflict && !options.overwriteExisting && !options.mergeWithExisting) {
+            return {
+              success: false,
+              error: '文件夹名称已存在，请选择处理方式',
+            };
+          }
+
+          let targetFolderId: string;
+          let importedColors = 0;
+
+          if (hasConflict && options.mergeWithExisting) {
+            // 合并到现有文件夹
+            const existingFolder = state.folders.find(f =>
+              f.name.toLowerCase() === sharedData.folder.name.toLowerCase()
+            );
+            targetFolderId = existingFolder!.id;
+          } else {
+            // 创建新文件夹
+            const folderName = options.customName ||
+              (hasConflict ? generateUniqueFolderName(sharedData.folder.name, state.folders) : sharedData.folder.name);
+
+            targetFolderId = get().createFolder({
+              name: folderName,
+              description: sharedData.folder.description,
+              icon: sharedData.folder.icon,
+              iconColor: sharedData.folder.iconColor,
+            });
+          }
+
+
+
+          // 添加颜色到文件夹
+          for (const color of sharedData.colors) {
+            try {
+              get().addColorToFolder(color.id, targetFolderId);
+              importedColors++;
+            } catch (error) {
+              // 颜色已存在于文件夹中，忽略错误
+            }
+          }
+
+          return {
+            success: true,
+            folderId: targetFolderId,
+            importedColors,
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : '导入失败',
+          };
+        }
+      },
+
+      handleFolderConflict: async (sharedData, strategy, customName) => {
+        const state = get();
+
+        switch (strategy) {
+          case 'rename':
+            return get().importSharedFolder(sharedData, {
+              customName: customName || generateUniqueFolderName(sharedData.folder.name, state.folders),
+            });
+
+          case 'replace':
+            // 删除现有文件夹
+            const existingFolder = state.folders.find(f =>
+              f.name.toLowerCase() === sharedData.folder.name.toLowerCase()
+            );
+            if (existingFolder) {
+              get().deleteFolder(existingFolder.id);
+            }
+            return get().importSharedFolder(sharedData);
+
+          case 'merge':
+            return get().importSharedFolder(sharedData, {
+              mergeWithExisting: true,
+            });
+
+          case 'cancel':
+            return {
+              success: false,
+              error: '用户取消导入',
+            };
+
+          default:
+            return {
+              success: false,
+              error: '无效的冲突处理策略',
+            };
+        }
       },
     }),
     {

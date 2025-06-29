@@ -271,3 +271,79 @@ export interface ColorConverterOutput {
   isValid: boolean;
   error?: string;
 }
+
+/**
+ * 文件夹分享数据结构
+ */
+export interface SharedFolderData {
+  /** 数据版本号，用于兼容性处理 */
+  version: string;
+  /** 文件夹基本信息 */
+  folder: ColorFolder;
+  /** 文件夹内的所有颜色 */
+  colors: ExtendedColor[];
+  /** 分享时间 */
+  sharedAt: string;
+  /** 元数据 */
+  metadata: {
+    /** 颜色总数 */
+    totalColors: number;
+    /** 分享者（可选） */
+    sharedBy?: string;
+    /** 应用版本 */
+    appVersion: string;
+    /** 分享来源 */
+    source?: string;
+  };
+}
+
+/**
+ * 文件夹导入结果
+ */
+export interface FolderImportResult {
+  /** 是否成功 */
+  success: boolean;
+  /** 导入的文件夹ID */
+  folderId?: string;
+  /** 导入的颜色数量 */
+  importedColors?: number;
+  /** 错误信息 */
+  error?: string;
+  /** 警告信息 */
+  warnings?: string[];
+}
+
+/**
+ * 文件夹导入选项
+ */
+export interface FolderImportOptions {
+  /** 是否覆盖同名文件夹 */
+  overwriteExisting?: boolean;
+  /** 是否合并到现有文件夹 */
+  mergeWithExisting?: boolean;
+  /** 自定义文件夹名称 */
+  customName?: string;
+}
+
+/**
+ * 文件夹名称冲突处理策略
+ */
+export type FolderConflictStrategy =
+  | 'rename'      // 重命名新文件夹
+  | 'replace'     // 替换现有文件夹
+  | 'merge'       // 合并到现有文件夹
+  | 'cancel';     // 取消导入
+
+/**
+ * 文件夹分享配置
+ */
+export interface FolderShareConfig {
+  /** 是否包含颜色描述 */
+  includeDescriptions?: boolean;
+  /** 是否包含标签信息 */
+  includeTags?: boolean;
+  /** 是否包含使用统计 */
+  includeUsageStats?: boolean;
+  /** 分享有效期（小时，0表示永久） */
+  expirationHours?: number;
+}

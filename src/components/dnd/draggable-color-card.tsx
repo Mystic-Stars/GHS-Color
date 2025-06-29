@@ -42,6 +42,7 @@ export const DraggableColorCard = React.memo(function DraggableColorCard({
       style={style}
       className={`${className} ${isDragging ? 'opacity-50' : ''}`}
       {...attributes}
+      {...listeners}
     >
       <div className="relative">
         <ColorCard
@@ -49,12 +50,28 @@ export const DraggableColorCard = React.memo(function DraggableColorCard({
           showDetails={showDetails}
           onClick={onClick}
         />
-        {/* 拖拽句柄 - 覆盖在颜色预览区域 */}
-        <div
-          className="absolute top-0 left-0 right-0 h-32 cursor-grab active:cursor-grabbing"
-          {...listeners}
-          title="拖拽到文件夹"
-        />
+
+        {/* 拖拽指示器 - 仅在悬停时显示 */}
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          <div className="bg-black/20 backdrop-blur-sm rounded-md p-1">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-white"
+            >
+              <circle cx="9" cy="12" r="1"/>
+              <circle cx="9" cy="5" r="1"/>
+              <circle cx="9" cy="19" r="1"/>
+              <circle cx="15" cy="12" r="1"/>
+              <circle cx="15" cy="5" r="1"/>
+              <circle cx="15" cy="19" r="1"/>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   );

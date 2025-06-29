@@ -11,6 +11,7 @@ import {
   Plus,
   Search,
   X,
+  Share2,
   Palette, Heart, Star, Zap, Target, Rocket, Sparkles, Camera,
   Music, Image, Film, Bookmark, Tag, Archive, Package, Box,
   Briefcase, Coffee, Home, Settings, Users, Globe, FolderPlus
@@ -26,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui';
 import { FolderManager } from './folder-manager';
+import { FolderShareDialog } from './folder-share-dialog';
 import { DroppableFolder } from '@/components/dnd';
 import { useFolderStore } from '@/store/folder-store';
 import { useColorStore } from '@/store/color-store';
@@ -117,6 +119,7 @@ export function FolderList({
   const [showManager, setShowManager] = useState(false);
   const [editingFolder, setEditingFolder] = useState<ColorFolder | null>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [sharingFolder, setSharingFolder] = useState<ColorFolder | null>(null);
 
   // 更新文件夹统计信息
   useEffect(() => {
@@ -148,6 +151,10 @@ export function FolderList({
   const handleEditFolder = (folder: ColorFolder) => {
     setEditingFolder(folder);
     setShowManager(true);
+  };
+
+  const handleShareFolder = (folder: ColorFolder) => {
+    setSharingFolder(folder);
   };
 
 
@@ -311,6 +318,11 @@ export function FolderList({
                       {t('common.edit')}
                     </DropdownMenuItem>
 
+                    <DropdownMenuItem onClick={() => handleShareFolder(folder)}>
+                      <Share2 className="h-4 w-4 mr-2" />
+                      {t('folder.share.title')}
+                    </DropdownMenuItem>
+
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => handleDeleteFolder(folder)}
@@ -340,6 +352,19 @@ export function FolderList({
           // 刷新列表会自动处理
         }}
       />
+
+      {/* 文件夹分享对话框 */}
+      {sharingFolder && (
+        <FolderShareDialog
+          folder={sharingFolder}
+          open={!!sharingFolder}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSharingFolder(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

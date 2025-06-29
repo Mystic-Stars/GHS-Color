@@ -56,3 +56,7 @@ export { Label } from './label';
 export { Textarea } from './textarea';
 export { ScrollArea, ScrollBar } from './scroll-area';
 export { Checkbox } from './checkbox';
+export { Switch } from './switch';
+export { RadioGroup, RadioGroupItem } from './radio-group';
+export { Separator } from './separator';
+export { Alert, AlertTitle, AlertDescription } from './alert';
