@@ -201,4 +201,26 @@ export const sampleColors: ExtendedColor[] = [
     true,
     28
   ),
+  createColor(
+    'Reimu Red',
+    '灵梦红',
+    '#ee3f44',
+    'The color of Reimu.',
+    '博丽灵梦的红色',
+    'brand',
+    ['brand', 'red', 'touhou'],
+    true,
+    2
+  ),
+  createColor(
+    'Cirno Blue',
+    '琪露诺蓝',
+    '#7082BF',
+    'The color of Cirno.',
+    '琪露诺的蓝色',
+    'brand',
+    ['brand', 'blue', 'touhou'],
+    true,
+    9
+  ),
 ];
