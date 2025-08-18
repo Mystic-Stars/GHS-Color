@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
+import { Footer } from './footer';
 import { useAppStore, useColorStore } from '@/store';
 
 interface MainLayoutProps {
@@ -60,7 +61,7 @@ export function MainLayout({
   }, [sidebarOpen, setSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* 头部导航 */}
       <Header
         onSubmitColor={onSubmitColor}
@@ -69,7 +70,7 @@ export function MainLayout({
       />
 
       {/* 主要内容区域 */}
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="flex flex-1 min-h-0">
         {/* 侧边栏 */}
         <Sidebar
           onBackToColors={onBackToColors}
@@ -82,9 +83,12 @@ export function MainLayout({
             sidebarOpen ? 'md:ml-0' : ''
           }`}
         >
-          <div className="h-full overflow-y-auto">{children}</div>
+          <div className="h-full overflow-y-auto pb-4">{children}</div>
         </main>
       </div>
+
+      {/* 页脚 */}
+      <Footer />
     </div>
   );
 }
